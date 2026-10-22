@@ -15,6 +15,21 @@ The idea: you say what you want, answer the agent's questions once, and get back
 
 ### Codex
 
+Run these commands in your terminal:
+
+```sh
+codex plugin marketplace add felixarjuna/it-stack
+codex plugin add it-stack@it-stack
+```
+
+Start a new Codex session after installation. You can also enter `/plugins` in Codex CLI to browse and install from the configured marketplace. These are Codex's [native plugin commands](https://learn.chatgpt.com/docs/cli/reference#codex-plugin); use a current CLI version if your installation doesn't recognize them.
+
+Codex supports the repo's existing Claude-compatible plugin and marketplace manifests, so both clients install the same ten skills and supporting files. No manual clone, Node.js setup, or installer script is needed for this route. Start with `$do-it`, or select a skill from Codex's skill picker.
+
+### Optional: standalone Codex skills
+
+Use this route for a project-local skills directory or a client that cannot install plugins. Choose either plugin installation or standalone skills to avoid duplicate entries. If you previously used this script, back up and move its ten installed skill folders out of your skill directory before switching to the plugin.
+
 With Git and Node.js 22.18+ (22.x) or 24+ installed, run these commands in PowerShell, bash or zsh:
 
 ```sh

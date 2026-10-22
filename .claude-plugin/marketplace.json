@@ -4,7 +4,7 @@
     "name": "Felix Arjuna",
     "url": "https://github.com/felixarjuna"
   },
-  "description": "Felix's <verb>-it agent skills as an installable Claude Code plugin.",
+  "description": "Felix's <verb>-it agent skills as an installable Claude Code and Codex plugin.",
   "plugins": [
     {
       "name": "it-stack",
