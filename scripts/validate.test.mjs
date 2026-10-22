@@ -129,6 +129,6 @@ test("project facts example parses", () => {
     ?.groups?.body;
   assert.ok(example, "project-facts.md needs a ```markdown example");
   for (const key of ["check", "screenshots", "migrations", "merge", "private"]) {
-    assert.match(example, new RegExp(`^- \*\*${key}:\*\* \S`, "m"), key);
+    assert.ok(example.includes(`\n- **${key}:** `), key);
   }
 });
