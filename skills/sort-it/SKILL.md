@@ -11,7 +11,7 @@ Read the project's `## it-stack` section first ([format and defaults](../ship-it
 
 ## 1. Load triage
 
-Find Matt Pocock's triage skill, which can't be invoked directly: the newest `~/.claude/plugins/cache/*/mattpocock-skills/*/skills/*/triage/SKILL.md`. Read it and use its **"Triage a specific issue"** steps 1 (gather context, redundancy check) and 3 (verify the claim) for every issue, plus the `AGENT-BRIEF.md` beside it when writing briefs. Do **not** apply its labels, post triage comments, or close anything: sort-it only reports.
+Find Matt Pocock's triage skill, which can't be invoked directly: `skills/*/triage/SKILL.md` inside the newest installed version of the plugin (the last line of `ls -d ~/.claude/plugins/cache/*/mattpocock-skills/*/ | sort -V`; versions compare as numbers, so 1.10 is newer than 1.9). Read it and use its **"Triage a specific issue"** steps 1 (gather context, redundancy check) and 3 (verify the claim) for every issue, plus the `AGENT-BRIEF.md` beside it when writing briefs. Do **not** apply its labels, post triage comments, or close anything: sort-it only reports.
 
 ## 2. Sort every open issue
 
@@ -39,7 +39,7 @@ A table, then the one message for the owner.
 
 The owner's message, most important first:
 
-1. Questions, grouped by issue, numbered so they can answer "3: yes". Each says in a few words why the answer matters.
+1. Questions, grouped by issue, numbered so they can answer "3: yes". Write them the way Matt Pocock's `to-questionnaire` says (in the same plugin folder, `skills/*/to-questionnaire/SKILL.md`), but in chat instead of a file: one idea per question, most important first, a short *why this matters* only where the question could be misread, and say that "I don't know" and partial answers are fine. End with "Anything else I should know?"
 2. "Closing these unless you object:" each `done` issue with its evidence.
 3. "Too big, I'll split these after your answers:" each `too big` issue.
 

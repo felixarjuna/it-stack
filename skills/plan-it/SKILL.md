@@ -7,6 +7,8 @@ description: Use when a request or issue is unclear, before building it. Asks th
 
 Nothing gets built on a guess. plan-it finds what's missing, asks, and writes the answers where the builder will read them: the issue.
 
+Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)). Issues may be public: everything you write into one follows the `private` fact.
+
 ## Pick the mode
 
 - **Chat mode** (the owner is talking to you): ask, one question per message.

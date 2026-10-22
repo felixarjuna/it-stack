@@ -34,7 +34,7 @@ Use `sort-it`. Write its table into the Queue of a new `.it-stack/run.md`.
 
 Send the owner `sort-it`'s message, nothing else, then end your turn and wait. If it has nothing to ask and nothing to close, skip the message and go straight to **Fill the slots**.
 
-When they answer: write each answer into its issue's `## Decisions` (as `plan-it` does), close the agreed `done` issues with a comment pointing at the evidence, move answered issues to `ready`, and run `split-it` on `too big` ones (their slices join the Queue). Questions an answer raised go into one follow-up message; don't launch those issues until answered.
+When they answer: write each answer into its issue's `## Decisions` (as `plan-it` does), close the agreed `done` issues with a comment pointing at the evidence, move answered issues to `ready`, and run `split-it` on `too big` ones: its slices join the Queue with the rows it returns, and the parent leaves the Queue (Done: `#<parent> split into #a, #b`). Questions an answer raised go into one follow-up message; don't launch those issues until answered.
 
 ## Fill the slots
 
@@ -85,7 +85,7 @@ Write the file, then **Report**.
 
 ## Done
 
-Queue empty and nothing Running: `unwatch_pull_request` anything still watched, tell the owner the run is finished with the Done list, and delete `.it-stack/run.md`.
+Queue empty and nothing Running: `unwatch_pull_request` anything still watched, remove any session worktrees left behind (as `merge-it` does), tell the owner the run is finished with the Done list, and delete `.it-stack/run.md`.
 
 ## Rules
 
