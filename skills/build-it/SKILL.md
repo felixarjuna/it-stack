@@ -16,7 +16,7 @@ Read the project's `## it-stack` section first ([format and defaults](../ship-it
 Something unclear that changes what gets built?
 
 - **Talking to the owner:** use `plan-it` (chat mode), then continue.
-- **Launched by run-it** (your instructions say `Control room thread: <id>`): comment the question on the issue, end your turn with the question as your last message (the control room reads it there), and stop. Don't guess.
+- **Launched by run-it** (your instructions say `Control room thread: <id>`): comment the question on the issue, send it to the control room with `t3_thread_send` (`threadId` = that id, `mode: "queue"`, message `Question on #<n>: <question>`), and stop. Don't guess.
 
 ## 2. Slot check
 

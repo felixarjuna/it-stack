@@ -55,7 +55,7 @@ Follow the `private` fact: nothing secret, no real user data, nothing about secu
 
 ## 5. Hand off
 
-- When T3 Code tools are available, `link_pull_request` with the PR URL. If your instructions name a control room (`Control room thread: <id>`), also link it with that `threadId`.
+- When T3 Code tools are available, `link_pull_request` with the PR URL. If your instructions name a control room (`Control room thread: <id>`), also link it with that `threadId`, then tell the control room with `t3_thread_send` (`mode: "queue"`, message `PR opened for #<n>: <url>`) so it starts watching.
 - Reply with one line: what the PR does, and its URL. The PR carries the rest.
 
 The PR briefing format comes from Lauren Tan's [pstack](https://github.com/cursor/plugins/tree/main/pstack) opening-a-pr playbook.

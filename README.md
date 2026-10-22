@@ -23,6 +23,11 @@ Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on t
 | **`sort-it`** | Sorts open issues against the code: ready, needs answers, too big, already done, security. One batched question message. |
 | **`split-it`** | Breaks work too big for one PR into small issues with "Blocked by" links. |
 | **`merge-it`** | On "merge": confirms checks are green, merges, cleans up, says what happens after. Never merges on its own. |
+| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: one question message, one T3 Code session per issue, at most 3 PRs open, next issue starts when one merges. |
+
+## The control room
+
+`run-it` turns the thread you start it in into a control room. It sorts the open issues against the code, sends you every question in one message, then launches one T3 Code session per issue, each in its own worktree, each ending in a PR. At most 3 PRs are open at a time, picked so they don't touch the same code and only one adds a database migration. You review on the PR page and say "merge" in the control room (or merge on GitHub); the next issue starts by itself. `run-it` needs [T3 Code](https://github.com/pingdotgg/t3code); every other skill works in any Claude Code client.
 
 ## Credits
 
