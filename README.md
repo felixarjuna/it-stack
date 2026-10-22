@@ -17,6 +17,9 @@ Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on t
 | --- | --- |
 | **`prove-it`** | Proves the change in the running app the way a user would, with phone and desktop screenshots it checks before using. |
 | **`ship-it`** | Check → commit → push → a PR that explains itself (Why, What changed, Scope, Verification, screenshots). Never merges. |
+| **`plan-it`** | Turns an unclear idea or issue into a brief: asks what is missing, writes the answers into the issue. |
+| ★ **`fix-it`** | Bugs: reproduce, root cause, failing test first, fix, ship. |
+| ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR that closes it. |
 
 ## Credits
 
