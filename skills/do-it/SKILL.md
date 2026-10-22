@@ -1,11 +1,13 @@
 ---
 name: do-it
-description: Use for any request when you're not sure which it-stack skill fits, or when the owner types /do-it. Reads the request, picks the right -it skill, says which in one line and follows it.
+description: Use for any request when you're not sure which it-stack skill fits, or when the owner types $do-it or /do-it. Reads the request, picks the right -it skill, says which in one line and follows it.
 ---
 
 # do-it
 
 The owner shouldn't have to remember skill names. Read the request, pick one skill, say "Using <skill>." and follow it.
+
+For Codex and Claude Code invocation and optional skill lookup, follow [Using skills across clients](../ship-it/project-facts.md#using-skills-across-clients). Read the selected sibling `../<name>/SKILL.md` in this session.
 
 | The request is… | Use |
 | --- | --- |

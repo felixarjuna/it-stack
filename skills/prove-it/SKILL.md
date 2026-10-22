@@ -21,7 +21,7 @@ Scripts, CI, docs, server-only fixes with no effect on a screen: skip screenshot
 
 ## Check every image
 
-Open each image with Read and look at it. Redo the shot when you see:
+Open each image with the client's image viewer (`view_image` in Codex, `Read` in Claude Code) and look at it. Redo the shot when you see:
 
 - a blank page, a sign-in redirect, a loading spinner, or an error page you didn't mean to show
 - an empty list where the change needs data

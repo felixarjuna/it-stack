@@ -3,13 +3,13 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
-import { validate } from "./validate.mjs";
+import { validate } from "./validate.ts";
 
-const skill = (name, description = `Use when ${name} is needed.`, body = "") =>
+const skill = (name: string, description = `Use when ${name} is needed.`, body = "") =>
   `---\nname: ${name}\ndescription: ${description}\n---\n\n# ${name}\n${body}`;
 
 /** Writes a minimal valid stack, then applies `overrides` (path → content). */
-const stack = (overrides = {}) => {
+const stack = (overrides: Record<string, string | null> = {}) => {
   const root = mkdtempSync(join(tmpdir(), "it-stack-"));
   const files = {
     ".claude-plugin/plugin.json": JSON.stringify({ name: "it-stack" }),
@@ -167,7 +167,7 @@ test("design docs may name the project", () => {
 });
 
 test("reads a multi-line description", () => {
-  const folded = (text) =>
+  const folded = (text: string) =>
     `---\nname: ship-it\ndescription: >\n  ${text}\n  more words.\n---\n`;
   assert.deepEqual(
     validate(stack({ "skills/ship-it/SKILL.md": folded("Use when done.") })),

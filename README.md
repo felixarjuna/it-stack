@@ -1,15 +1,54 @@
 # it-stack
 
-Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on the end.
+Felix's agent skill stack for Claude Code and Codex. Every skill is a verb with `-it` on the end.
 
 The idea: you say what you want, answer the agent's questions once, and get back pull requests you can judge in a minute from the PR page, each with a short briefing and phone and desktop screenshots. You say "merge", and the next piece of work starts. Nothing merges without you.
 
 ## Install
 
+### Claude Code
+
 ```
 /plugin marketplace add felixarjuna/it-stack
 /plugin install it-stack@it-stack
 ```
+
+### Codex
+
+Run these commands in your terminal:
+
+```sh
+codex plugin marketplace add felixarjuna/it-stack
+codex plugin add it-stack@it-stack
+```
+
+Start a new Codex session after installation. You can also enter `/plugins` in Codex CLI to browse and install from the configured marketplace. These are Codex's [native plugin commands](https://learn.chatgpt.com/docs/cli/reference#codex-plugin); use a current CLI version if your installation doesn't recognize them.
+
+Codex supports the repo's existing Claude-compatible plugin and marketplace manifests, so both clients install the same ten skills and supporting files. No manual clone, Node.js setup, or installer script is needed for this route. Start with `$do-it`, or select a skill from Codex's skill picker.
+
+### Optional: standalone Codex skills
+
+Use this route for a project-local skills directory or a client that cannot install plugins. Choose either plugin installation or standalone skills to avoid duplicate entries. If you previously used this script, back up and move its ten installed skill folders out of your skill directory before switching to the plugin.
+
+With Git and Node.js 22.18+ (22.x) or 24+ installed, run these commands in PowerShell, bash or zsh:
+
+```sh
+git clone https://github.com/felixarjuna/it-stack.git
+cd it-stack
+node scripts/install-codex.ts
+```
+
+The installer copies all ten skill folders and their supporting files to `~/.agents/skills`, Codex's [user skill location](https://developers.openai.com/codex/skills/). No Claude Code installation or subscription is needed. Start with `$do-it`, or type `$fix-it`, `$build-it`, or `$run-it`. If the skills don't appear, restart Codex.
+
+For skills available only in one project, pass its skill directory instead:
+
+```sh
+node scripts/install-codex.ts --dest "/path/to/project/.agents/skills"
+```
+
+On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the ten previously installed it-stack folders out of the destination, then run the installer again. Keep the ten folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
+
+Optional skills such as superpowers and mattpocock-skills can be installed separately for either client. The shared workflows use the current client's skill catalog and local skill directories, with inline fallbacks when optional skills are missing.
 
 ## Skills
 
@@ -30,11 +69,24 @@ The idea: you say what you want, answer the agent's questions once, and get back
 
 ## Set up a project
 
-The skills know nothing about your project until it tells them. Add an `## it-stack` section to its `CLAUDE.md` (or `AGENTS.md`) with five facts: the `check` command, how to take `screenshots`, where `migrations` live, how to `merge`, and what's `private`. The [format, an example and the defaults](skills/ship-it/project-facts.md) are in ship-it. If you use `run-it`, add `.it-stack/` to `.gitignore`.
+The skills know nothing about your project until it tells them. Add an `## it-stack` section to its `AGENTS.md` (Codex) or `CLAUDE.md` (Claude Code) with five facts: the `check` command, how to take `screenshots`, where `migrations` live, how to `merge`, and what's `private`. The [format, an example and the defaults](skills/ship-it/project-facts.md) are in ship-it. If you use `run-it`, add `.it-stack/` to `.gitignore`.
 
 ## The control room
 
-`run-it` turns the thread you start it in into a control room. It sorts the open issues against the code, shows you the plan, asks the open questions one at a time (starting work as soon as an issue's questions are answered), and launches one T3 Code session per issue, each in its own worktree, each ending in a PR. At most 3 PRs are open at a time, picked so they don't touch the same code and only one adds a database migration. You review on the PR page and say "merge" in the control room (or merge on GitHub); the next issue starts by itself. `run-it` needs [T3 Code](https://github.com/pingdotgg/t3code); every other skill works in any Claude Code client.
+`run-it` turns the thread you start it in into a control room. It sorts the open issues against the code, shows you the plan, asks the open questions one at a time (starting work as soon as an issue's questions are answered), and launches one T3 Code session per issue, each in its own worktree, each ending in a PR. At most 3 PRs are open at a time, picked so they don't touch the same code and only one adds a database migration. You review on the PR page and say "merge" in the control room (or merge on GitHub); the next issue starts by itself. `run-it` needs [T3 Code](https://github.com/pingdotgg/t3code) with its orchestration tools, whether you use Claude or Codex; every other skill works in Claude Code or Codex with the tools its workflow needs (Git, authenticated `gh`, and the project's build and verification tools).
+
+In Codex, `run-it` explicitly selects the current provider and model from T3's live catalog and preserves compatible model options. In Claude Code, it keeps the Claude Opus 5.5 default. Your explicit choice, or a project's optional `sessions` fact, overrides those defaults. It reports unavailable selections instead of switching providers silently.
+
+## Development
+
+```sh
+npm ci
+npm run typecheck
+npm test
+npm run validate
+```
+
+The TypeScript scripts run directly in Node without a build step or runtime dependencies. Development dependencies provide strict type checking. Installer tests use temporary destinations and do not modify your personal skills. CI runs type checking and the checks on Windows, macOS and Linux with Node 22.18 and 26.
 
 ## Credits
 

@@ -52,21 +52,27 @@ Repeat while a slot is free and the Queue has a launchable issue:
 
 Pick the oldest launchable issue and launch it:
 
-**Default agent model: Claude Opus 5.5** (`claude-opus-5-5`, provider instance `claudeAgent`), unless the owner explicitly requests another model. Call `orchestrator_capabilities` to confirm the provider and exact model ID are available before spawning. Set the model explicitly; omitting it inherits the control room's model and can launch Fable instead. If Opus 5.5 is unavailable, report that and ask which model to use rather than silently substituting one. Preserve explicitly requested model options using the live catalog's supported fields.
+Resolve the session model before launching:
 
-For `t3_thread_launch`, pass `modelSelection` as shown below. For delegated child agents, use `delegate_task` with `target: { providerInstanceId: "claudeAgent", model: "claude-opus-5-5" }`. This model default applies whenever this workflow spawns an agent, including replacement sessions and review agents; it does not authorize additional agents or top-level threads.
+On a resumed run, reuse the recorded `Session selection` unless the owner explicitly changes it; validate it against the live catalog again. If an older run file has no selection, resolve one using the steps below before launching more sessions. Taking over the control room never changes models silently or restarts existing sessions.
+
+1. Call `orchestrator_capabilities` for the live provider/model catalog and inherited settings. Search the catalog for a requested model if it isn't in the short list.
+2. Use the owner's explicit provider/model/options choice first, then the project's `sessions` fact. Otherwise, **in Codex**, select `inheritedProviderInstanceId` and `inheritedModel` from that response; **in Claude Code**, keep the default Claude Opus 5.5 (`claude-opus-5-5` on `claudeAgent`). Never guess a Codex model ID or require a Claude subscription from Codex.
+3. Confirm the exact provider and model are available. If the selection can't be resolved, report it and ask which model to use; don't silently substitute. When using the current provider and model, preserve `inheritedOptions`; explicit options override individual values. For a different provider or model, use its supported options rather than carrying over incompatible ones. Report unsupported requested options.
+4. Set the resolved selection explicitly in `modelSelection`, including supported options, and check the returned selection against it. Record the choice in `.it-stack/run.md` so resumes and replacements keep it unless the owner changes it.
+
+For `t3_thread_launch`, fill in the resolved values below. For delegated child agents, use `delegate_task` with `target: { providerInstanceId: "<resolved instance>", model: "<resolved model>", options: <resolved options> }`; use the tool's supported options format. This selection applies to replacement sessions and review agents too; it does not authorize additional agents or top-level threads. `run-it` explicitly runs one independent T3 session per issue; outside that request, use child delegation for subagents.
 
 ```
 t3_thread_launch {
   title: "#<n> <issue title>",
-  modelSelection: { instanceId: "claudeAgent", model: "claude-opus-5-5" },
+  modelSelection: { instanceId: "<resolved instance>", model: "<resolved model>", options: <resolved options> },
   workspaceStrategy: { type: "worktree", baseRef: "<default branch>", branch: "<type>/<n>-<slug>", startFromOrigin: true },
-  modelSelection: { instanceId: "claudeAgent", model: "claude-opus-5-5" },
   message: "Use the build-it skill for #<n>. Control room thread: <this thread id>. Link your PR to the control room and tell it with t3_thread_send when the PR is open, when you have a question, or when the check fails for a reason outside your issue (don't fix that yourself)."
 }
 ```
 
-Sessions run on the model in `modelSelection`: Claude Opus 5.5 unless the project's `## it-stack` section has a `sessions` fact naming another model (never inherit the control room's model silently; a cheaper or different model there would change what the sessions build). Add a Running row with its thread id, state `running`. Then report.
+Retain the returned thread id and follow preparation with `t3_thread_read` / `t3_thread_wait`. A launch has no retry key: after an error or lost response, inspect `t3_thread_list` before retrying so it doesn't create a duplicate session. Add a Running row with its thread id, state `running`. Then report.
 
 ## Report
 

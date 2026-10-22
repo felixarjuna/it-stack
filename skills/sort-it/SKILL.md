@@ -11,7 +11,7 @@ Read the project's `## it-stack` section first ([format and defaults](../ship-it
 
 ## 1. Load triage
 
-Find Matt Pocock's triage skill, which can't be invoked directly: `skills/*/triage/SKILL.md` inside the newest installed version of the plugin (the last line of `ls -d ~/.claude/plugins/cache/*/mattpocock-skills/*/ | sort -V`; versions compare as numbers, so 1.10 is newer than 1.9). Read it and use its **"Triage a specific issue"** steps 1 (gather context, redundancy check) and 3 (verify the claim) for every issue, plus the `AGENT-BRIEF.md` beside it when writing briefs. Do **not** apply its labels, post triage comments, or close anything: sort-it only reports.
+Find Matt Pocock's `triage` skill using [the current client's skill lookup](../ship-it/project-facts.md#using-skills-across-clients). Read its `SKILL.md` and use its **"Triage a specific issue"** steps 1 (gather context, redundancy check) and 3 (verify the claim) for every issue, plus the `AGENT-BRIEF.md` beside it when writing briefs. Do **not** apply its labels, post triage comments, or close anything: sort-it only reports. If it isn't installed, use the fallback below.
 
 ## 2. Sort every open issue
 
@@ -49,7 +49,7 @@ Three things, in this order.
 
 Mark the issues that still need an answer before they can start ("after 2 questions").
 
-**The questions**, an ordered list, most important first: the one whose answer unblocks the most work, or changes the plan most, comes first. Write each the way Matt Pocock's `to-questionnaire` says (in the same plugin folder, `skills/*/to-questionnaire/SKILL.md`), but for chat: one idea per question, naming its issue, with a short *why this matters* only where it could be misread. Offer 2–3 concrete options when there's an obvious set, with your recommendation first. The caller asks them **one at a time**; never send the list to the owner as a block.
+**The questions**, an ordered list, most important first: the one whose answer unblocks the most work, or changes the plan most, comes first. Find Matt Pocock's `to-questionnaire` with the same client-aware lookup and follow it when available, adapted for chat: one idea per question, naming its issue, with a short *why this matters* only where it could be misread. Offer 2–3 concrete options when there's an obvious set, with your recommendation first. The caller asks them **one at a time**; never send the list to the owner as a block.
 
 ## If it isn't installed
 
