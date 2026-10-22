@@ -39,16 +39,23 @@ const UNCHECKED = new Set([
 
 const read = (path) => readFileSync(path, "utf8");
 
+/** Top-level keys of the frontmatter; `>` and `|` blocks join their indented lines. */
 const frontmatter = (text) => {
   const body = FRONTMATTER.exec(text)?.groups?.body;
   if (!body) return null;
-  return Object.fromEntries(
-    body
-      .split(/\r?\n/)
-      .map((line) => /^(?<key>[\w-]+):\s*(?<value>.*)$/.exec(line)?.groups)
-      .filter(Boolean)
-      .map(({ key, value }) => [key, value.trim()])
-  );
+  const meta = {};
+  let blockKey = null;
+  for (const line of body.split(/\r?\n/)) {
+    const field = /^(?<key>[\w-]+):\s*(?<value>.*)$/.exec(line)?.groups;
+    if (field) {
+      const isBlock = /^[>|][+-]?$/.test(field.value.trim());
+      blockKey = isBlock ? field.key : null;
+      meta[field.key] = isBlock ? "" : field.value.trim();
+    } else if (blockKey && /^\s/.test(line)) {
+      meta[blockKey] = `${meta[blockKey]} ${line.trim()}`.trim();
+    }
+  }
+  return meta;
 };
 
 const filesUnder = (dir) =>
