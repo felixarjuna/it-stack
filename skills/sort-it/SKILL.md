@@ -5,6 +5,8 @@ description: Use to go through a repo's open issues - check each against the cod
 
 # sort-it
 
+First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 The owner should see the plan first, then answer only questions the code can't answer, one at a time.
 
 Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).
@@ -53,4 +55,4 @@ Mark the issues that still need an answer before they can start ("after 2 questi
 
 ## If it isn't installed
 
-Without mattpocock-skills: for each issue, read it fully, search the code for an existing implementation by concept (not only by the issue's words) and say where you looked, and for a bug, reproduce it before believing it. Then sort as above. To get the full version, install `mattpocock-skills`.
+Without mattpocock-skills: for each issue, read it fully, search the code for an existing implementation by concept (not only by the issue's words) and say where you looked, and for a bug, reproduce it before believing it. Then sort as above. Use this fallback when dependency setup leaves the optional skills unavailable.

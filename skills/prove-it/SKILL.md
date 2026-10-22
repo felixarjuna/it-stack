@@ -5,6 +5,8 @@ description: Use before calling a change done, and from ship-it. Runs the real a
 
 # prove-it
 
+First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 "The tests pass" isn't proof that a user gets the right thing. Prove the change in the running app, on the real user path, and show it.
 
 Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).

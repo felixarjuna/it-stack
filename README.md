@@ -48,7 +48,9 @@ node scripts/install-codex.ts --dest "/path/to/project/.agents/skills"
 
 On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the ten previously installed it-stack folders out of the destination, then run the installer again. Keep the ten folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
 
-Optional skills such as superpowers and mattpocock-skills can be installed separately for either client. The shared workflows use the current client's skill catalog and local skill directories, with inline fallbacks when optional skills are missing.
+Every skill starts with an [optional dependency check](skills/ship-it/dependency-setup.md). It recognizes existing plugins and standalone skills, then offers to install missing Superpowers and Matt Pocock skills together. The offer shows their sources and installation scope and waits for your consent. This runs when an agent follows a skill, not when the plugin itself is installed.
+
+Choose **Install listed dependencies**, **Continue with fallbacks** for this task, or **Don't ask again for these dependencies**. The last choice is saved per client, plugin, source, and scope in `~/.it-stack/dependency-preferences.json`; new dependencies still get their own prompt. Ask to reconsider a dependency to revisit the choice. No installation approvals are stored. Declines, installation failures, unsupported clients, and installations requiring a restart use the existing fallbacks so your original task can continue. Delegated and unattended work never prompts or installs.
 
 ## Skills
 
@@ -96,7 +98,7 @@ it-stack builds on other people's work instead of copying it:
 - [mattpocock/skills](https://github.com/mattpocock/skills) by Matt Pocock: `triage`, `to-tickets`, `wayfinder`, `grilling`.
 - [superpowers](https://github.com/obra/superpowers) by Jesse Vincent: `brainstorming`, `systematic-debugging`, `test-driven-development`.
 
-Install mattpocock-skills and superpowers for the full experience; every skill that uses them has a fallback when they're missing.
+The setup check offers mattpocock-skills and superpowers for the full experience; every skill that uses them has a fallback when they're unavailable.
 
 ## License
 

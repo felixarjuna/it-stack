@@ -5,6 +5,8 @@ description: Use when a change is finished. Checks it, proves it in the running 
 
 # ship-it
 
+First follow [optional dependency setup](dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 The owner reviews on the PR page, not in chat. The goal is a PR they can judge in a minute: why, what changed, proof it works, screenshots. Open it without asking. Never merge; that's `merge-it`, and only when the owner says so.
 
 Read the project's `## it-stack` section first ([format and defaults](project-facts.md)).
