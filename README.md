@@ -1,6 +1,8 @@
 # it-stack
 
-Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on the end: say what you want, answer the questions once, and get back pull requests you can judge in a minute from the PR page.
+Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on the end.
+
+The idea: you say what you want, answer the agent's questions once, and get back pull requests you can judge in a minute from the PR page, each with a short briefing and phone and desktop screenshots. You say "merge", and the next piece of work starts. Nothing merges without you.
 
 ## Install
 
@@ -15,15 +17,20 @@ Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on t
 
 | Skill | Job |
 | --- | --- |
-| **`prove-it`** | Proves the change in the running app the way a user would, with phone and desktop screenshots it checks before using. |
-| **`ship-it`** | Check → commit → push → a PR that explains itself (Why, What changed, Scope, Verification, screenshots). Never merges. |
-| **`plan-it`** | Turns an unclear idea or issue into a brief: asks what is missing, writes the answers into the issue. |
+| ★ **`do-it`** | Start here. Reads any request and picks the right skill below. |
 | ★ **`fix-it`** | Bugs: reproduce, root cause, failing test first, fix, ship. |
 | ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR that closes it. |
+| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: one question message, one T3 Code session per issue, at most 3 PRs open, next issue starts when one merges. |
+| **`plan-it`** | Turns an unclear idea or issue into a brief: asks what is missing, writes the answers into the issue. |
 | **`sort-it`** | Sorts open issues against the code: ready, needs answers, too big, already done, security. One batched question message. |
 | **`split-it`** | Breaks work too big for one PR into small issues with "Blocked by" links. |
+| **`prove-it`** | Proves the change in the running app the way a user would, with phone and desktop screenshots it checks before using. |
+| **`ship-it`** | Check → commit → push → a PR that explains itself (Why, What changed, Scope, Verification, screenshots). Never merges. |
 | **`merge-it`** | On "merge": confirms checks are green, merges, cleans up, says what happens after. Never merges on its own. |
-| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: one question message, one T3 Code session per issue, at most 3 PRs open, next issue starts when one merges. |
+
+## Set up a project
+
+The skills know nothing about your project until it tells them. Add an `## it-stack` section to its `CLAUDE.md` (or `AGENTS.md`) with five facts: the `check` command, how to take `screenshots`, where `migrations` live, how to `merge`, and what's `private`. The [format, an example and the defaults](skills/ship-it/project-facts.md) are in ship-it. If you use `run-it`, add `.it-stack/` to `.gitignore`.
 
 ## The control room
 
