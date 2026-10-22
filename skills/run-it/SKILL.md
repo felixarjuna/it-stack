@@ -1,6 +1,6 @@
 ---
 name: run-it
-description: Use when the owner wants the whole backlog worked ("run the issues", "do all of them"). Turns this thread into a control room - sorts the issues, asks every question in one message, runs one T3 Code session per issue with at most 3 PRs open, and starts the next issue each time one merges. Requires T3 Code.
+description: Use when the owner wants the whole backlog worked ("run the issues", "do all of them"). Turns this thread into a control room - sorts the issues, shows the plan, asks the open questions one at a time, runs one T3 Code session per issue with at most 3 PRs open, and starts the next issue each time one merges. Requires T3 Code.
 ---
 
 # run-it
@@ -30,11 +30,18 @@ No `t3_thread_launch` tool available? Say "run-it needs T3 Code; use build-it fo
 
 Use `sort-it`. Write its table into the Queue of a new `.it-stack/run.md`.
 
-## Ask once
+## Show the plan, then ask one at a time
 
-Send the owner `sort-it`'s message, nothing else, then end your turn and wait. If it has nothing to ask and nothing to close, skip the message and go straight to **Fill the slots**.
+Send the owner `sort-it`'s **plan**, then the **first question** only. End your turn and wait. Keep the remaining questions in a `## Questions` list in the run file (open / answered), so a resumed control room knows where it was.
 
-When they answer: write each answer into its issue's `## Decisions` (as `plan-it` does), close the agreed `done` issues with a comment pointing at the evidence, move answered issues to `ready`, and run `split-it` on `too big` ones: its slices join the Queue with the rows it returns, and the parent leaves the Queue (Done: `#<parent> split into #a, #b`). Questions an answer raised go into one follow-up message; don't launch those issues until answered.
+On each answer:
+
+1. Write it into its issue's `## Decisions` (as `plan-it` does), or, for a "close as done?" question, close the issue with a comment pointing at the evidence.
+2. A question the answer raised goes into the list, right after the current one if it blocks the same issue.
+3. When an issue has no open questions left, move it to `ready` (or run `split-it` if it's `too big`: its slices join the Queue with the rows it returns, and the parent leaves the Queue with Done `#<parent> split into #a, #b`), and **Fill the slots** right away, so work starts while you keep asking.
+4. Ask the next question, with a one-line note of what just changed ("#48 started").
+
+No questions at all? Send the plan and go straight to **Fill the slots**. "Skip" or "later" on a question: move it to the end and ask the next; an issue with a skipped question doesn't start.
 
 ## Fill the slots
 

@@ -12,7 +12,7 @@ Read the project's `## it-stack` section first ([format and defaults](../ship-it
 ## Pick the mode
 
 - **Chat mode** (the owner is talking to you): ask, one question per message.
-- **Batch mode** (called by `sort-it` or `run-it`): don't ask. Return the questions for that issue, each with why the answer changes what gets built, most important first. The caller merges every issue's questions into one message.
+- **Batch mode** (called by `sort-it` or `run-it`): don't ask. Return the questions for that issue, each with why the answer changes what gets built, most important first. The caller orders every issue's questions and asks them one at a time.
 
 ## What to find out
 

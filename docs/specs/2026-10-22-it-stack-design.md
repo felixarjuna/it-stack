@@ -131,7 +131,7 @@ it-stack/
 - Public repo.
 - PRs open without asking; Felix reviews on the PR page; never auto-merge.
 - At most 3 PRs open at once, chosen to avoid overlapping code and racing migrations; the next issue starts when one merges.
-- Questions come in one batch, not drip-fed.
+- Questions come in one batch, not drip-fed. (Changed 2026-10-22 after the first run: the owner sees the plan first, then gets the questions one at a time, most important first; an issue starts as soon as its own questions are answered.)
 - `run-it` runs as a control room: its thread watches every PR, Felix says "merge" there or on GitHub, and it starts the next issue itself.
 - `run-it` is T3 Code only for now (Felix works mostly in T3 Code). A fallback with Claude Code background agents and a timer-based check can come later. Every other skill works in any Claude Code client and only links PRs to a thread when T3 Code is there.
 - Build on Matt Pocock's and pstack's ideas rather than adopting either wholesale.

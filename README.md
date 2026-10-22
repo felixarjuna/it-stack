@@ -20,9 +20,9 @@ The idea: you say what you want, answer the agent's questions once, and get back
 | ★ **`do-it`** | Start here. Reads any request and picks the right skill below. |
 | ★ **`fix-it`** | Bugs: reproduce, root cause, failing test first, fix, ship. |
 | ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR that closes it. |
-| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: one question message, one T3 Code session per issue, at most 3 PRs open, next issue starts when one merges. |
+| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: the plan first, then questions one at a time, one T3 Code session per issue, at most 3 PRs open, next issue starts when one merges. |
 | **`plan-it`** | Turns an unclear idea or issue into a brief: asks what is missing, writes the answers into the issue. |
-| **`sort-it`** | Sorts open issues against the code: ready, needs answers, too big, already done, security. One batched question message. |
+| **`sort-it`** | Sorts open issues against the code: ready, needs answers, too big, already done, security. Produces the plan and the questions, most important first. |
 | **`split-it`** | Breaks work too big for one PR into small issues with "Blocked by" links. |
 | **`prove-it`** | Proves the change in the running app the way a user would, with phone and desktop screenshots it checks before using. |
 | **`ship-it`** | Check → commit → push → a PR that explains itself (Why, What changed, Scope, Verification, screenshots). Never merges. |
@@ -34,7 +34,7 @@ The skills know nothing about your project until it tells them. Add an `## it-st
 
 ## The control room
 
-`run-it` turns the thread you start it in into a control room. It sorts the open issues against the code, sends you every question in one message, then launches one T3 Code session per issue, each in its own worktree, each ending in a PR. At most 3 PRs are open at a time, picked so they don't touch the same code and only one adds a database migration. You review on the PR page and say "merge" in the control room (or merge on GitHub); the next issue starts by itself. `run-it` needs [T3 Code](https://github.com/pingdotgg/t3code); every other skill works in any Claude Code client.
+`run-it` turns the thread you start it in into a control room. It sorts the open issues against the code, shows you the plan, asks the open questions one at a time (starting work as soon as an issue's questions are answered), and launches one T3 Code session per issue, each in its own worktree, each ending in a PR. At most 3 PRs are open at a time, picked so they don't touch the same code and only one adds a database migration. You review on the PR page and say "merge" in the control room (or merge on GitHub); the next issue starts by itself. `run-it` needs [T3 Code](https://github.com/pingdotgg/t3code); every other skill works in any Claude Code client.
 
 ## Credits
 
