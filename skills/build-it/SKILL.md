@@ -20,11 +20,11 @@ Something unclear that changes what gets built?
 
 ## 2. Slot check
 
-Skip it when launched by run-it: the control room already reserved your slot. Otherwise run the slot check below; over the limit, say so in one line and ask before starting.
+Skip the duplicate slot check when run-it already reserved this issue, whether in an external session or inline. Do not count your own reserved row as a new competing slot. Inline questions stay in the current conversation; external workers send questions to their separate control room. Otherwise run the slot check below; over the limit, say so in one line and ask before starting.
 
 ## 3. Branch
 
-Launched by run-it? You're already on your branch in your own worktree; stay on it. Otherwise, if an open PR for this issue exists (its branch is `*/<n>-*` or its body says `Closes #<n>`), check out its branch and continue there. Otherwise branch from the default branch: `<type>/<n>-<short-slug>` (e.g. `feat/12-order-notes`).
+Run-it already recorded a workspace and branch for this issue (external or inline)? Use that workspace and branch; do not start a duplicate checkout. Otherwise, if an open PR for this issue exists (its branch is `*/<n>-*` or its body says `Closes #<n>`), check out its branch and continue there. Otherwise branch from the default branch: `<type>/<n>-<short-slug>` (e.g. `feat/12-order-notes`).
 
 ## 4. Build
 

@@ -10,7 +10,7 @@ For optional skills such as `superpowers:test-driven-development` or `mattpocock
 
 ## Format
 
-Five keys, one bullet each. A value can run over several lines; keep it to what an agent needs to act.
+Five required keys plus optional execution/session preferences, one bullet each. A value can run over several lines; keep it to what an agent needs to act.
 
 ```markdown
 ## it-stack
@@ -20,6 +20,7 @@ Five keys, one bullet each. A value can run over several lines; keep it to what 
 - **migrations:** `db/migrations/`, made with `npm run db:generate`. Only one open PR may add a migration; after rebasing onto a new one, delete yours and regenerate.
 - **merge:** `--squash --delete-branch`. After merge, CI applies migrations to production; until then the new release can fail on new columns.
 - **private:** screenshots show seed data only, never production. Security problems go to private advisories, never public issues or PRs.
+- **execution:** inline (optional; use `sessions` to request separate T3 sessions).
 - **sessions:** current provider and model (optional; or name a specific provider instance, model and supported options for run-it).
 ```
 
@@ -30,6 +31,7 @@ Five keys, one bullet each. A value can run over several lines; keep it to what 
 - **migrations:** look for a usual migrations folder (`migrations/`, `db/migrate/`, `prisma/migrations/`, `drizzle/`, `alembic/versions/`) and use it; a new file there means the change adds a migration. Found none: treat as "no migrations". Say which you assumed (in the PR's Verification, or to the owner in one line when no PR is involved).
 - **merge:** `--merge --delete-branch`.
 - **private:** never put secrets, real user data or security details in a PR, issue or commit; the repo may be public.
-- **sessions:** in Codex, the current provider instance and model, confirmed through `orchestrator_capabilities`; in Claude Code, Claude Opus 5.5 (`claude-opus-5-5` on `claudeAgent`). See run-it's model selection steps. Explicit owner choices take priority over this fact.
+- **execution:** inline. Preserve a recorded run mode on resume; an explicit owner choice overrides it.
+- **sessions:** for external sessions/review agents, in Codex, the current provider instance and model, confirmed through `orchestrator_capabilities`; in Claude Code, Claude Opus 5.5 (`claude-opus-5-5` on `claudeAgent`). See run-it's model selection steps. Explicit owner choices take priority over this fact.
 
 When the whole section is missing, use these defaults and suggest adding the section in the PR's Scope.

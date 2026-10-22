@@ -11,7 +11,7 @@ Read the project's `## it-stack` section first ([format and defaults](project-fa
 
 ## 1. Check
 
-Run the `check` command. Fix anything red, including failures you didn't cause, unless your instructions name a control room: then a failure outside your issue goes to the control room (`t3_thread_send`, message `Check fails outside #<n>: <failure>`) and you wait, so parallel sessions don't all fix the same thing. Never open a PR on a red check.
+Run the `check` command. Fix anything red, including failures you didn't cause, unless you are an external worker with a different control-room thread: then a failure outside your issue goes to the control room (`t3_thread_send`, message `Check fails outside #<n>: <failure>`) and you wait, so parallel sessions don't all fix the same thing. Never open a PR on a red check.
 
 ## 2. Prove it
 
@@ -55,7 +55,7 @@ Follow the `private` fact: nothing secret, no real user data, nothing about secu
 
 ## 5. Hand off
 
-- When T3 Code tools are available, `link_pull_request` with the PR URL. If your instructions name a control room (`Control room thread: <id>`, or a later "Control room thread is now <id>"; use the latest), also link it with that `threadId`, then tell the control room with `t3_thread_send` (`mode: "queue"`, message `PR opened for #<n>: <url>`) so it starts watching.
+- When T3 Code tools are available, `link_pull_request` with the PR URL. If you are an external worker whose instructions name a different control room (`Control room thread: <id>`, or a later "Control room thread is now <id>"; use the latest), also link it with that `threadId`, then tell the control room with `t3_thread_send` (`mode: "queue"`, message `PR opened for #<n>: <url>`) so it starts watching.
 - Reply with one line: what the PR does, and its URL. The PR carries the rest.
 
 The PR briefing format comes from Lauren Tan's [pstack](https://github.com/cursor/plugins/tree/main/pstack) opening-a-pr playbook.
