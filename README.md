@@ -61,7 +61,7 @@ Choose **Install listed dependencies**, **Continue with fallbacks** for this tas
 | ★ **`do-it`** | Start here. Reads any request and picks the right skill below. |
 | ★ **`fix-it`** | Bugs: reproduce, root cause, failing test first, fix, ship. |
 | ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR that closes it. |
-| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: the plan first, then questions one at a time, one T3 Code session per issue, at most 3 PRs open, next issue starts when one merges. |
+| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: the plan first, then questions one at a time, inline by default or separate T3 sessions when selected, at most 3 PRs open, dependent issues start after merge. |
 | **`plan-it`** | Turns an unclear idea or issue into a brief: asks what is missing, writes the answers into the issue. |
 | **`sort-it`** | Sorts open issues against the code: ready, needs answers, too big, already done, security. Produces the plan and the questions, most important first. |
 | **`split-it`** | Breaks work too big for one PR into small issues with "Blocked by" links. |
@@ -75,9 +75,13 @@ The skills know nothing about your project until it tells them. Add an `## it-st
 
 ## The control room
 
-`run-it` turns the thread you start it in into a control room. It sorts the open issues against the code, shows you the plan, asks the open questions one at a time (starting work as soon as an issue's questions are answered), and launches one T3 Code session per issue, each in its own worktree, each ending in a PR. At most 3 PRs are open at a time, picked so they don't touch the same code and only one adds a database migration. You review on the PR page and say "merge" in the control room (or merge on GitHub); the next issue starts by itself. `run-it` needs [T3 Code](https://github.com/pingdotgg/t3code) with its orchestration tools, whether you use Claude or Codex; every other skill works in Claude Code or Codex with the tools its workflow needs (Git, authenticated `gh`, and the project's build and verification tools).
+`run-it` keeps the backlog in the current thread: it sorts issues, asks unresolved questions, and tracks work through review and merge. The default is **inline** execution with Superpowers planning, test-driven development and verification when installed. This is useful for sequential or tightly coupled issues. Each issue still gets a small PR; dependent work waits for its prerequisite PR to merge. Without Superpowers, the same steps have an inline fallback.
 
-In Codex, `run-it` explicitly selects the current provider and model from T3's live catalog and preserves compatible model options. In Claude Code, it keeps the Claude Opus 5.5 default. Your explicit choice, or a project's optional `sessions` fact, overrides those defaults. It reports unavailable selections instead of switching providers silently.
+Choose **sessions** when you want independent issues built in separate T3 Code worktrees. Only this mode requires T3 orchestration tools. Both modes keep the limit of 3 open PRs and 1 active migration, and never merge without your instruction. Execution mode is recorded for resume; switching to inline lets existing workers finish without launching replacements.
+
+For separate sessions or reviewers, Codex resolves the current provider/model and compatible options from T3's live catalog; Claude Code retains its Claude Opus 5.5 default. Your explicit choice or the project's optional `sessions` fact overrides those defaults. The optional `execution` fact selects inline or sessions. Inline work uses the current conversation's model.
+
+With T3, PR watches can wake the run. Without T3, inline mode resumes on your next message rather than promising background execution.
 
 ## Development
 
