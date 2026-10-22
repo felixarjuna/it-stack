@@ -5,6 +5,8 @@ description: Use when a request or issue is unclear, before building it. Asks th
 
 # plan-it
 
+First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 Nothing gets built on a guess. plan-it finds what's missing, asks, and writes the answers where the builder will read them: the issue.
 
 Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)). Issues may be public: everything you write into one follows the `private` fact.
@@ -47,4 +49,4 @@ The issue should now be buildable without the conversation. If the work is too b
 
 ## If it isn't installed
 
-Without superpowers or mattpocock-skills: read the issue and code, list what's unclear, and ask one question per message, each about a concrete moment ("walk me through the last time…") rather than a menu. After each answer, play back what you understood in a few lines and ask what's wrong or missing. Then write the brief as above. To get the full version, install `superpowers` and `mattpocock-skills`.
+Without superpowers or mattpocock-skills: read the issue and code, list what's unclear, and ask one question per message, each about a concrete moment ("walk me through the last time…") rather than a menu. After each answer, play back what you understood in a few lines and ask what's wrong or missing. Then write the brief as above. Use this fallback when dependency setup leaves the optional skills unavailable.

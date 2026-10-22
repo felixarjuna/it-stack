@@ -5,6 +5,8 @@ description: Use to build one issue or clear feature from start to finish - read
 
 # build-it
 
+First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 One issue in, one PR out.
 
 Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).
@@ -46,4 +48,4 @@ Limit reached and you weren't launched by run-it: tell the owner in one line whi
 
 ## If it isn't installed
 
-Without superpowers: for each behaviour, write the test, run it and see it fail for the right reason, write the code, run it green. Run the whole `check` before `ship-it`. To get the full version, install `superpowers`.
+Without superpowers: for each behaviour, write the test, run it and see it fail for the right reason, write the code, run it green. Run the whole `check` before `ship-it`. Use this fallback when dependency setup leaves the optional skills unavailable.
