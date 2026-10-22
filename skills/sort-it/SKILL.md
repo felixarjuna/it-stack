@@ -1,11 +1,11 @@
 ---
 name: sort-it
-description: Use to go through a repo's open issues - check each against the code and sort it into ready, needs answers, too big, already done or security, with its code areas and whether it needs a migration. Produces one batched question message for the owner. Called by run-it; can be typed alone.
+description: Use to go through a repo's open issues - check each against the code and sort it into ready, needs answers, too big, already done or security, with its code areas and whether it needs a migration. Produces the plan for the backlog and an ordered list of questions for the owner, asked one at a time. Called by run-it; can be typed alone.
 ---
 
 # sort-it
 
-The owner should answer questions once, for the whole backlog, and only questions the code can't answer.
+The owner should see the plan first, then answer only questions the code can't answer, one at a time.
 
 Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).
 
@@ -29,7 +29,9 @@ Also record for each: **areas** (the top-level folders or routes it will touch),
 
 ## 3. Output
 
-A table, then the one message for the owner.
+Three things, in this order.
+
+**The table** (it goes into run-it's Queue):
 
 ```markdown
 | # | State | Areas | Migration | Depends on |
@@ -37,13 +39,17 @@ A table, then the one message for the owner.
 | 19 | needs answers | app/accounts, api/accounts | yes | – |
 ```
 
-The owner's message, most important first:
+**The plan**, shown to the owner first: one line per issue saying what will happen to it and when, in plain words. Group the lines:
 
-1. Questions, grouped by issue, numbered so they can answer "3: yes". Write them the way Matt Pocock's `to-questionnaire` says (in the same plugin folder, `skills/*/to-questionnaire/SKILL.md`), but in chat instead of a file: one idea per question, most important first, a short *why this matters* only where the question could be misread, and say that "I don't know" and partial answers are fine. End with "Anything else I should know?"
-2. "Closing these unless you object:" each `done` issue with its evidence.
-3. "Too big, I'll split these after your answers:" each `too big` issue.
+- **Start first** (in parallel): the issues that can run together within the limits, and why they don't collide.
+- **After that:** the issues that wait for another one to merge, and what they wait for.
+- **Split first:** the `too big` issues, and roughly into what.
+- **Close as done:** each `done` issue with its evidence (closed only after the owner agrees).
+- Security issues are only counted ("1 security issue skipped"), never described.
 
-Security issues are only counted ("1 security issue skipped"), never described.
+Mark the issues that still need an answer before they can start ("after 2 questions").
+
+**The questions**, an ordered list, most important first: the one whose answer unblocks the most work, or changes the plan most, comes first. Write each the way Matt Pocock's `to-questionnaire` says (in the same plugin folder, `skills/*/to-questionnaire/SKILL.md`), but for chat: one idea per question, naming its issue, with a short *why this matters* only where it could be misread. Offer 2–3 concrete options when there's an obvious set, with your recommendation first. The caller asks them **one at a time**; never send the list to the owner as a block.
 
 ## If it isn't installed
 

@@ -27,6 +27,11 @@ Started: 2026-11-02
 | 21 | ready | app/orders | yes | 12 |
 | 19 | needs answers | app/accounts | yes | – |
 
+## Questions
+
+- [x] #19: Can a customer change an order after the kitchen has seen it? → no (owner, 2026-11-02)
+- [ ] #21: Should order notes be visible to the delivery driver?
+
 ## Done
 
 - #9 → #37 merged 2026-11-02
