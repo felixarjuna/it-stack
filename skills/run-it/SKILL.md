@@ -61,11 +61,12 @@ t3_thread_launch {
   title: "#<n> <issue title>",
   modelSelection: { instanceId: "claudeAgent", model: "claude-opus-5-5" },
   workspaceStrategy: { type: "worktree", baseRef: "<default branch>", branch: "<type>/<n>-<slug>", startFromOrigin: true },
+  modelSelection: { instanceId: "claudeAgent", model: "claude-opus-5-5" },
   message: "Use the build-it skill for #<n>. Control room thread: <this thread id>. Link your PR to the control room and tell it with t3_thread_send when the PR is open, when you have a question, or when the check fails for a reason outside your issue (don't fix that yourself)."
 }
 ```
 
-Add a Running row with its thread id, state `running`. Then report.
+Sessions run on the model in `modelSelection`: Claude Opus 5.5 unless the project's `## it-stack` section has a `sessions` fact naming another model (never inherit the control room's model silently; a cheaper or different model there would change what the sessions build). Add a Running row with its thread id, state `running`. Then report.
 
 ## Report
 
