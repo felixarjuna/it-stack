@@ -5,6 +5,8 @@ description: Use when the owner says "merge" (one PR, several, or "them"). Confi
 
 # merge-it
 
+First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 Merge only on the owner's word, and only green PRs.
 
 Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).

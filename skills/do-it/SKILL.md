@@ -5,6 +5,8 @@ description: Use for any request when you're not sure which it-stack skill fits,
 
 # do-it
 
+First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 The owner shouldn't have to remember skill names. Read the request, pick one skill, say "Using <skill>." and follow it.
 
 For Codex and Claude Code invocation and optional skill lookup, follow [Using skills across clients](../ship-it/project-facts.md#using-skills-across-clients). Read the selected sibling `../<name>/SKILL.md` in this session.

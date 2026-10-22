@@ -5,6 +5,8 @@ description: Use when something is broken, wrong or failing. Reproduces it, find
 
 # fix-it
 
+First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 Fix the cause, not the symptom, and prove it stays fixed.
 
 Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).
@@ -27,4 +29,4 @@ Use `ship-it`. In the PR, Why says what the user saw; What changed names the cau
 
 ## If it isn't installed
 
-Without superpowers: reproduce, then read the code path end to end and write down the cause in one sentence before changing anything. If two fixes in a row fail, the theory is wrong: go back to reproducing. Write the failing test, watch it fail, fix, watch it pass, run `check`. To get the full version, install `superpowers`.
+Without superpowers: reproduce, then read the code path end to end and write down the cause in one sentence before changing anything. If two fixes in a row fail, the theory is wrong: go back to reproducing. Write the failing test, watch it fail, fix, watch it pass, run `check`. Use this fallback when dependency setup leaves the optional skills unavailable.

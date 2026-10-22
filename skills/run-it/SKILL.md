@@ -5,6 +5,8 @@ description: Use when the owner wants the whole backlog worked ("run the issues"
 
 # run-it
 
+First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+
 This thread becomes the **control room**: the one place the owner talks to while many sessions build in parallel. The owner answers questions once, reviews PRs on the PR page, and says "merge" here (or merges on GitHub). Everything else keeps moving by itself.
 
 Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).
