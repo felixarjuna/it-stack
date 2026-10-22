@@ -31,6 +31,7 @@ Started: 2026-11-02
 
 - #9 → #37 merged 2026-11-02
 - #11 closed: already done (owner agreed 2026-11-02)
+- #14 split into #22, #23, #24
 - 1 security issue skipped
 ```
 

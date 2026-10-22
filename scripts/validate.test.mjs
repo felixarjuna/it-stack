@@ -165,3 +165,16 @@ test("design docs may name the project", () => {
     []
   );
 });
+
+test("reads a multi-line description", () => {
+  const folded = (text) =>
+    `---\nname: ship-it\ndescription: >\n  ${text}\n  more words.\n---\n`;
+  assert.deepEqual(
+    validate(stack({ "skills/ship-it/SKILL.md": folded("Use when done.") })),
+    []
+  );
+  const problems = validate(
+    stack({ "skills/ship-it/SKILL.md": folded("x".repeat(1025)) })
+  );
+  assert.ok(problems.some((p) => p.includes("description")), problems.join("\n"));
+});

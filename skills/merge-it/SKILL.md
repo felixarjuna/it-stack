@@ -25,7 +25,9 @@ Read the project's `## it-stack` section first ([format and defaults](../ship-it
 
 Merge PRs one at a time, oldest first, each with the `merge` fact's method and branch deletion (default `gh pr merge <n> --merge --delete-branch`). A later PR that conflicts after an earlier merge goes back to step 2.
 
-Then `git switch <default branch> && git pull`, and delete local branches whose PRs merged (a branch still checked out in a session's worktree stays until that worktree is removed).
+Then `git switch <default branch> && git pull`, and delete local branches whose PRs merged.
+
+**Session worktrees** (run-it gives each session its own): for each merged PR, find its worktree in `git worktree list` by branch. Remove it only when its session thread is no longer running (`t3_thread_list` status isn't `running` or `starting`) and `git -C <path> status --porcelain` is empty: `git worktree remove <path>`, then `git branch -D <branch>`. Otherwise leave it and say which one is still in use.
 
 ## 4. Report
 

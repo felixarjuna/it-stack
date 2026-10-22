@@ -7,12 +7,14 @@ description: Use when an issue or plan is too big for one PR or one session. Bre
 
 A PR the owner can judge in a minute needs work small enough to fit in one. split-it makes the pieces.
 
+Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)). Issues may be public: everything you write into one follows the `private` fact.
+
 ## 1. Load the splitting method
 
-Matt Pocock's skills for this can't be invoked directly; find the newest file and follow it:
+Matt Pocock's skills for this can't be invoked directly. They live under `skills/*/<name>/SKILL.md` inside the newest installed version of the plugin (the last line of `ls -d ~/.claude/plugins/cache/*/mattpocock-skills/*/ | sort -V`; versions compare as numbers, so 1.10 is newer than 1.9). Find the one you need and follow it:
 
-- **Fits a few sessions:** `~/.claude/plugins/cache/*/mattpocock-skills/*/skills/*/to-tickets/SKILL.md`. Tracer-bullet vertical slices, each with its blocking edges.
-- **More than a few sessions can hold, or full of open decisions:** `…/wayfinder/SKILL.md`. A map of decision tickets resolved one at a time; each resolved decision becomes buildable issues.
+- **Fits a few sessions:** `to-tickets`. Tracer-bullet vertical slices, each with its blocking edges.
+- **More than a few sessions can hold, or full of open decisions:** `wayfinder`. A map of decision tickets resolved one at a time; each resolved decision becomes buildable issues.
 
 Where they talk about "the configured tracker" or label vocabulary, use GitHub issues through `gh` and no labels.
 
@@ -31,6 +33,9 @@ Part of #<parent>.
 
 Done when: <what the user can do, observed in the running app>
 
+Areas: <top-level folders or routes it touches>
+Migration: <yes/no, per the `migrations` fact>
+
 Blocked by #<n>, #<m>
 ```
 
@@ -39,6 +44,8 @@ Leave out `Blocked by` when it can start now. Order matters for migrations: when
 ## 3. Link them
 
 Add a checklist to the parent issue (`- [ ] #<n> <title>` per slice) and a line saying it's tracked by its slices. Don't close the parent; it closes with its last slice's PR (`Closes #<parent>` there).
+
+Called by run-it? Also return one Queue row per slice (`#n | ready | areas | migration | depends on`, with its `Blocked by` issues as depends on) so the control room can schedule them.
 
 ## If it isn't installed
 
