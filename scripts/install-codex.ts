@@ -5,7 +5,7 @@ import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const usage = `Usage: node scripts/install-codex.mjs [--dest <skills-directory>]
+const usage = `Usage: node scripts/install-codex.ts [--dest <skills-directory>]
 
 Default: ~/.agents/skills (available to Codex in every project).
 For one project: --dest <project>/.agents/skills
@@ -33,7 +33,7 @@ try {
       try {
         lstatSync(target);
       } catch (error) {
-        if (error.code === "ENOENT") continue;
+        if (error instanceof Error && "code" in error && error.code === "ENOENT") continue;
         throw error;
       }
       throw new Error(`${target} already exists. Back it up or choose another --dest; no skills were copied.`);
@@ -46,6 +46,6 @@ try {
     console.log(`Installed ${names.length} it-stack skills in ${destination}.\nIn Codex, use $do-it to start. Restart Codex if the skills do not appear.`);
   }
 } catch (error) {
-  console.error(error.message);
+  console.error(error instanceof Error ? error.message : String(error));
   process.exitCode = 1;
 }

@@ -15,12 +15,12 @@ The idea: you say what you want, answer the agent's questions once, and get back
 
 ### Codex
 
-With Git and Node.js 22 or newer installed, run these commands in PowerShell, bash or zsh:
+With Git and Node.js 22.18+ (22.x) or 24+ installed, run these commands in PowerShell, bash or zsh:
 
 ```sh
 git clone https://github.com/felixarjuna/it-stack.git
 cd it-stack
-node scripts/install-codex.mjs
+node scripts/install-codex.ts
 ```
 
 The installer copies all ten skill folders and their supporting files to `~/.agents/skills`, Codex's [user skill location](https://developers.openai.com/codex/skills/). No Claude Code installation or subscription is needed. Start with `$do-it`, or type `$fix-it`, `$build-it`, or `$run-it`. If the skills don't appear, restart Codex.
@@ -28,7 +28,7 @@ The installer copies all ten skill folders and their supporting files to `~/.age
 For skills available only in one project, pass its skill directory instead:
 
 ```sh
-node scripts/install-codex.mjs --dest "/path/to/project/.agents/skills"
+node scripts/install-codex.ts --dest "/path/to/project/.agents/skills"
 ```
 
 On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the ten previously installed it-stack folders out of the destination, then run the installer again. Keep the ten folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
@@ -65,11 +65,13 @@ In Codex, `run-it` explicitly selects the current provider and model from T3's l
 ## Development
 
 ```sh
+npm ci
+npm run typecheck
 npm test
 npm run validate
 ```
 
-Installer tests use temporary destinations and do not modify your personal skills. CI runs the checks on Windows, macOS and Linux.
+The TypeScript scripts run directly in Node without a build step or runtime dependencies. Development dependencies provide strict type checking. Installer tests use temporary destinations and do not modify your personal skills. CI runs type checking and the checks on Windows, macOS and Linux with Node 22.18 and 26.
 
 ## Credits
 

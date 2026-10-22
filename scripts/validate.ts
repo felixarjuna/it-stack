@@ -3,7 +3,7 @@
  * Checks the stack before it ships: skill frontmatter, manifests, README
  * table, fallbacks for referenced plugins, and no private or project text.
  *
- *   node scripts/validate.mjs [root]
+ *   node scripts/validate.ts [root]
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -37,14 +37,14 @@ const UNCHECKED = new Set([
   "scripts",
 ]);
 
-const read = (path) => readFileSync(path, "utf8");
+const read = (path: string): string => readFileSync(path, "utf8");
 
 /** Top-level keys of the frontmatter; `>` and `|` blocks join their indented lines. */
-const frontmatter = (text) => {
+const frontmatter = (text: string): Record<string, string> | null => {
   const body = FRONTMATTER.exec(text)?.groups?.body;
   if (!body) return null;
-  const meta = {};
-  let blockKey = null;
+  const meta: Record<string, string> = {};
+  let blockKey: string | null = null;
   for (const line of body.split(/\r?\n/)) {
     const field = /^(?<key>[\w-]+):\s*(?<value>.*)$/.exec(line)?.groups;
     if (field) {
@@ -58,27 +58,27 @@ const frontmatter = (text) => {
   return meta;
 };
 
-const filesUnder = (dir) =>
+const filesUnder = (dir: string): string[] =>
   readdirSync(dir).flatMap((entry) => {
     const path = join(dir, entry);
     return statSync(path).isDirectory() ? filesUnder(path) : [path];
   });
 
-const checkManifests = (root) => {
+const checkManifests = (root: string): string[] => {
   const pluginPath = join(root, ".claude-plugin/plugin.json");
   const marketPath = join(root, ".claude-plugin/marketplace.json");
   if (!(existsSync(pluginPath) && existsSync(marketPath))) {
     return [".claude-plugin/plugin.json and marketplace.json are required"];
   }
-  const plugin = JSON.parse(read(pluginPath));
-  const market = JSON.parse(read(marketPath));
+  const plugin: { name: string } = JSON.parse(read(pluginPath));
+  const market: { plugins?: { name: string }[] } = JSON.parse(read(marketPath));
   const listed = market.plugins?.map((entry) => entry.name) ?? [];
   return listed.includes(plugin.name)
     ? []
     : [`marketplace.json doesn't list plugin "${plugin.name}"`];
 };
 
-const checkSkill = (root, folder, readme) => {
+const checkSkill = (root: string, folder: string, readme: string): string[] => {
   const path = join(root, "skills", folder, "SKILL.md");
   if (!existsSync(path)) return [`skills/${folder} has no SKILL.md`];
   const text = read(path);
@@ -106,7 +106,7 @@ const checkSkill = (root, folder, readme) => {
   return problems;
 };
 
-const checkPrivateText = (root) =>
+const checkPrivateText = (root: string): string[] =>
   readdirSync(root)
     .filter((entry) => !UNCHECKED.has(entry))
     .flatMap((entry) => {
@@ -121,7 +121,7 @@ const checkPrivateText = (root) =>
     });
 
 /** Every problem in the stack at `root`; empty when it's fine to ship. */
-export const validate = (root) => {
+export const validate = (root: string): string[] => {
   const readme = existsSync(join(root, "README.md"))
     ? read(join(root, "README.md"))
     : "";

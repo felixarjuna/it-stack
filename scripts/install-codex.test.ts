@@ -4,13 +4,13 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, 
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { test } from "node:test";
+import { test, type TestContext } from "node:test";
 
 const repo = fileURLToPath(new URL("../", import.meta.url));
-const script = join(repo, "scripts/install-codex.mjs");
+const script = join(repo, "scripts/install-codex.ts");
 const names = readdirSync(join(repo, "skills")).sort();
-const run = (cwd, ...args) => spawnSync(process.execPath, [script, ...args], { cwd, encoding: "utf8" });
-const temporary = (t) => {
+const run = (cwd: string, ...args: string[]) => spawnSync(process.execPath, [script, ...args], { cwd, encoding: "utf8" });
+const temporary = (t: TestContext) => {
   const root = mkdtempSync(join(tmpdir(), "it-stack-codex-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   return root;
@@ -36,14 +36,16 @@ test("installs all skills and references from another working directory into a p
 test("checks all conflicts before copying and preserves existing skills", (t) => {
   const root = temporary(t);
   const dest = join(root, "skills");
-  const conflict = join(dest, names.at(-1), "SKILL.md");
+  const lastName = names.at(-1);
+  assert.ok(lastName, "the stack must contain skills");
+  const conflict = join(dest, lastName, "SKILL.md");
   mkdirSync(dirname(conflict), { recursive: true });
   writeFileSync(conflict, "my existing skill");
   const result = run(root, "--dest", dest);
   assert.equal(result.status, 1);
   assert.match(result.stderr, /already exists/i);
   assert.equal(readFileSync(conflict, "utf8"), "my existing skill");
-  assert.deepEqual(readdirSync(dest), [names.at(-1)]);
+  assert.deepEqual(readdirSync(dest), [lastName]);
 });
 
 test("keeps unrelated installed skills", (t) => {
