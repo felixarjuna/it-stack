@@ -15,6 +15,8 @@ Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on t
 
 | Skill | Job |
 | --- | --- |
+| **`prove-it`** | Proves the change in the running app the way a user would, with phone and desktop screenshots it checks before using. |
+| **`ship-it`** | Check → commit → push → a PR that explains itself (Why, What changed, Scope, Verification, screenshots). Never merges. |
 
 ## Credits
 

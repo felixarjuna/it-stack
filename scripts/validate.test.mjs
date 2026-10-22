@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
@@ -118,4 +118,17 @@ test("marketplace and plugin names agree", () => {
     })
   );
   assert.ok(problems.length > 0);
+});
+
+test("project facts example parses", () => {
+  const doc = readFileSync(
+    new URL("../skills/ship-it/project-facts.md", import.meta.url),
+    "utf8"
+  );
+  const example = /```markdown\n(?<body>## it-stack[\s\S]*?)```/.exec(doc)
+    ?.groups?.body;
+  assert.ok(example, "project-facts.md needs a ```markdown example");
+  for (const key of ["check", "screenshots", "migrations", "merge", "private"]) {
+    assert.match(example, new RegExp(`^- \*\*${key}:\*\* \S`, "m"), key);
+  }
 });
