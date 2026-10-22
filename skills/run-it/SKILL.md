@@ -52,9 +52,14 @@ Repeat while a slot is free and the Queue has a launchable issue:
 
 Pick the oldest launchable issue and launch it:
 
+**Default agent model: Claude Opus 5.5** (`claude-opus-5-5`, provider instance `claudeAgent`), unless the owner explicitly requests another model. Call `orchestrator_capabilities` to confirm the provider and exact model ID are available before spawning. Set the model explicitly; omitting it inherits the control room's model and can launch Fable instead. If Opus 5.5 is unavailable, report that and ask which model to use rather than silently substituting one. Preserve explicitly requested model options using the live catalog's supported fields.
+
+For `t3_thread_launch`, pass `modelSelection` as shown below. For delegated child agents, use `delegate_task` with `target: { providerInstanceId: "claudeAgent", model: "claude-opus-5-5" }`. This model default applies whenever this workflow spawns an agent, including replacement sessions and review agents; it does not authorize additional agents or top-level threads.
+
 ```
 t3_thread_launch {
   title: "#<n> <issue title>",
+  modelSelection: { instanceId: "claudeAgent", model: "claude-opus-5-5" },
   workspaceStrategy: { type: "worktree", baseRef: "<default branch>", branch: "<type>/<n>-<slug>", startFromOrigin: true },
   message: "Use the build-it skill for #<n>. Control room thread: <this thread id>. Link your PR to the control room and tell it with t3_thread_send when the PR is open, when you have a question, or when the check fails for a reason outside your issue (don't fix that yourself)."
 }
