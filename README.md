@@ -20,6 +20,8 @@ Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on t
 | **`plan-it`** | Turns an unclear idea or issue into a brief: asks what is missing, writes the answers into the issue. |
 | ★ **`fix-it`** | Bugs: reproduce, root cause, failing test first, fix, ship. |
 | ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR that closes it. |
+| **`sort-it`** | Sorts open issues against the code: ready, needs answers, too big, already done, security. One batched question message. |
+| **`split-it`** | Breaks work too big for one PR into small issues with "Blocked by" links. |
 
 ## Credits
 
