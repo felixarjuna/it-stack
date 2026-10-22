@@ -22,6 +22,7 @@ Felix's agent skill stack for Claude Code. Every skill is a verb with `-it` on t
 | ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR that closes it. |
 | **`sort-it`** | Sorts open issues against the code: ready, needs answers, too big, already done, security. One batched question message. |
 | **`split-it`** | Breaks work too big for one PR into small issues with "Blocked by" links. |
+| **`merge-it`** | On "merge": confirms checks are green, merges, cleans up, says what happens after. Never merges on its own. |
 
 ## Credits
 
