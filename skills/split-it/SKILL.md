@@ -11,7 +11,7 @@ Read the project's `## it-stack` section first ([format and defaults](../ship-it
 
 ## 1. Load the splitting method
 
-Matt Pocock's skills for this can't be invoked directly. They live under `skills/*/<name>/SKILL.md` inside the newest installed version of the plugin (the last line of `ls -d ~/.claude/plugins/cache/*/mattpocock-skills/*/ | sort -V`; versions compare as numbers, so 1.10 is newer than 1.9). Find the one you need and follow it:
+Find Matt Pocock's skills using [the current client's skill lookup](../ship-it/project-facts.md#using-skills-across-clients). Read the selected `SKILL.md` and follow it, or use the fallback below if it isn't installed:
 
 - **Fits a few sessions:** `to-tickets`. Tracer-bullet vertical slices, each with its blocking edges.
 - **More than a few sessions can hold, or full of open decisions:** `wayfinder`. A map of decision tickets resolved one at a time; each resolved decision becomes buildable issues.

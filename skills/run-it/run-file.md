@@ -11,6 +11,7 @@ Control room: 3f2c9a10-0000-4000-8000-000000000000
 Repo: someone/bakery-orders (default branch: main)
 Limit: 3 open PRs, 1 migration
 Started: 2026-11-02
+Session selection: <resolved modelSelection as JSON, including options>
 
 ## Running
 
@@ -47,3 +48,5 @@ Started: 2026-11-02
 **Queue:** the states from `sort-it`: `ready`, `needs answers`, `too big`.
 
 Thread IDs in the file are full IDs; they're shortened above only to fit.
+
+`Session selection` stores the provider instance, model and options resolved by run-it, using the returned T3 `modelSelection` shape. Replace the placeholder with the actual JSON. Reuse it on resume and for replacement sessions; if it becomes unavailable, ask the owner rather than switching models.
