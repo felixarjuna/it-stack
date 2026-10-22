@@ -15,13 +15,27 @@ const FRONTMATTER = /^---\r?\n(?<body>[\s\S]*?)\r?\n---/;
 const REFERENCES_PLUGIN = /mattpocock-skills|superpowers:/;
 const FALLBACK_HEADING = /^## If it isn't installed/m;
 const PRIVATE_TEXT = [
-  { label: "project name", pattern: /PERKI/ },
-  { label: "project city", pattern: /Aachen/ },
+  { label: "project name", pattern: /perki/i },
+  { label: "project city", pattern: /aachen/i },
   {
     label: "email address",
-    pattern: /\b(?!noreply@)[\w.+-]+@[\w-]+\.[\w.]+\b/,
+    pattern: /(?<![\w.+-])(?!noreply@)[\w.+-]+@[\w-]+\.[a-z]{2,}\b/i,
+  },
+  { label: "GitHub token", pattern: /\bgh[pousr]_[A-Za-z0-9]{20,}/ },
+  { label: "API key", pattern: /\bsk-[A-Za-z0-9-]{16,}/ },
+  {
+    label: "database URL with a password",
+    pattern: /\w+:\/\/[^\s:/@]+:[^\s@/]+@/,
   },
 ];
+/** Folders the private-text check skips: design history and the checker itself. */
+const UNCHECKED = new Set([
+  ".git",
+  ".superpowers",
+  "docs",
+  "node_modules",
+  "scripts",
+]);
 
 const read = (path) => readFileSync(path, "utf8");
 
@@ -85,18 +99,19 @@ const checkSkill = (root, folder, readme) => {
   return problems;
 };
 
-const checkPrivateText = (root) => {
-  const files = [
-    join(root, "README.md"),
-    ...(existsSync(join(root, "skills")) ? filesUnder(join(root, "skills")) : []),
-  ].filter(existsSync);
-  return files.flatMap((path) => {
-    const text = read(path);
-    return PRIVATE_TEXT.filter(({ pattern }) => pattern.test(text)).map(
-      ({ label }) => `${relative(root, path)}: contains a ${label}`
-    );
-  });
-};
+const checkPrivateText = (root) =>
+  readdirSync(root)
+    .filter((entry) => !UNCHECKED.has(entry))
+    .flatMap((entry) => {
+      const path = join(root, entry);
+      return statSync(path).isDirectory() ? filesUnder(path) : [path];
+    })
+    .flatMap((path) => {
+      const text = read(path);
+      return PRIVATE_TEXT.filter(({ pattern }) => pattern.test(text)).map(
+        ({ label }) => `${relative(root, path)}: contains a ${label}`
+      );
+    });
 
 /** Every problem in the stack at `root`; empty when it's fine to ship. */
 export const validate = (root) => {

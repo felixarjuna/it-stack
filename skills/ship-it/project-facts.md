@@ -20,7 +20,7 @@ Five keys, one bullet each. A value can run over several lines; keep it to what 
 
 - **check:** use the first of the `check`, `test`, `lint` scripts in `package.json` (or the language's usual test command), and write in the PR's Verification which command you assumed.
 - **screenshots:** treat as `none`. Describe what you saw in the running app instead, and say there's no screenshot setup.
-- **migrations:** treat as "no migrations". If the change adds one anyway, say so in Scope.
+- **migrations:** look for a usual migrations folder (`migrations/`, `db/migrate/`, `prisma/migrations/`, `drizzle/`, `alembic/versions/`) and use it; a new file there means the change adds a migration. Found none: treat as "no migrations". Say which you assumed (in the PR's Verification, or to the owner in one line when no PR is involved).
 - **merge:** `--merge --delete-branch`.
 - **private:** never put secrets, real user data or security details in a PR, issue or commit; the repo may be public.
 

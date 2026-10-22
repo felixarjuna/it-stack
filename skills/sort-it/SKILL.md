@@ -34,7 +34,7 @@ A table, then the one message for the owner.
 ```markdown
 | # | State | Areas | Migration | Depends on |
 | --- | --- | --- | --- | --- |
-| 48 | needs answers | src/app/account, src/server/api/routers/profiles | yes | – |
+| 19 | needs answers | app/accounts, api/accounts | yes | – |
 ```
 
 The owner's message, most important first:

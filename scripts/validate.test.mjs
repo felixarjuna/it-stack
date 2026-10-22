@@ -132,3 +132,36 @@ test("project facts example parses", () => {
     assert.ok(example.includes(`\n- **${key}:** `), key);
   }
 });
+
+test("rejects private text in any case and anywhere outside docs and scripts", () => {
+  const cases = {
+    "skills/ship-it/SKILL.md": skill("ship-it", undefined, "see perkiweb"),
+    ".claude-plugin/plugin.json": JSON.stringify({
+      name: "it-stack",
+      description: "for Perki",
+    }),
+  };
+  for (const [path, content] of Object.entries(cases)) {
+    assert.ok(validate(stack({ [path]: content })).length > 0, path);
+  }
+});
+
+test("rejects secret-looking strings", () => {
+  for (const secret of [
+    "ghp_abcdefghijklmnopqrstuvwxyz0123456789",
+    "sk-ant-api03-abcdefghijklmnop",
+    "postgres://admin:hunter2@db.example.com:5432/app",
+  ]) {
+    const problems = validate(
+      stack({ "skills/ship-it/SKILL.md": skill("ship-it", undefined, secret) })
+    );
+    assert.ok(problems.length > 0, `not rejected: ${secret}`);
+  }
+});
+
+test("design docs may name the project", () => {
+  assert.deepEqual(
+    validate(stack({ "docs/specs/design.md": "Built first for PERKIWeb." })),
+    []
+  );
+});

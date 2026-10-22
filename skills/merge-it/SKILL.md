@@ -18,14 +18,14 @@ Read the project's `## it-stack` section first ([format and defaults](../ship-it
 `gh pr checks <n>`.
 
 - **Still running:** wait for them (`gh pr checks <n> --watch`), then go on.
-- **Failed:** don't merge. Say which check failed and why in one line, fix it on the PR's branch (re-run `ship-it` to update the PR), and merge once green.
-- **Conflicts with the base:** rebase onto the default branch, re-run `check`, push, wait for green.
+- **Failed:** don't merge. Say which check failed and why in one line. Fix it (in a control room, through the PR's session: run-it's `fixing` path), then report the fix in one line and wait for the owner to say "merge" again: they approved the diff they saw, not your fix.
+- **Conflicts with the base:** rebase onto the default branch, re-run `check`, push, wait for green. A rebase that only regenerates a migration or resolves an import clash can merge on the same "merge"; anything that changes behaviour waits for the owner again, as above.
 
 ## 3. Merge
 
 Merge PRs one at a time, oldest first, each with the `merge` fact's method and branch deletion (default `gh pr merge <n> --merge --delete-branch`). A later PR that conflicts after an earlier merge goes back to step 2.
 
-Then `git switch <default branch> && git pull`, and delete local branches whose PRs merged.
+Then `git switch <default branch> && git pull`, and delete local branches whose PRs merged (a branch still checked out in a session's worktree stays until that worktree is removed).
 
 ## 4. Report
 
@@ -33,4 +33,4 @@ One line per PR: merged, plus anything the `merge` fact says still happens after
 
 ## In a run-it control room
 
-When this thread is a run-it control room (it has `.it-stack/run.md` naming this thread), continue with run-it's **On wake-up** steps after merging: free the slots and start the next issues.
+When this thread is a run-it control room (`.it-stack/run.md` names this thread's id, from `t3_thread_list` → `currentThreadId`), continue with run-it's **On wake-up** steps after merging: free the slots and start the next issues.
