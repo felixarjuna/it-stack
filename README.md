@@ -24,11 +24,11 @@ codex plugin add it-stack@it-stack
 
 Start a new Codex session after installation. You can also enter `/plugins` in Codex CLI to browse and install from the configured marketplace. These are Codex's [native plugin commands](https://learn.chatgpt.com/docs/cli/reference#codex-plugin); use a current CLI version if your installation doesn't recognize them.
 
-Codex supports the repo's existing Claude-compatible plugin and marketplace manifests, so both clients install the same ten skills and supporting files. No manual clone, Node.js setup, or installer script is needed for this route. Start with `$do-it`, or select a skill from Codex's skill picker.
+Codex supports the repo's existing Claude-compatible plugin and marketplace manifests, so both clients install the same eleven skills and supporting files. No manual clone, Node.js setup, or installer script is needed for this route. Start with `$do-it`, or select a skill from Codex's skill picker.
 
 ### Optional: standalone Codex skills
 
-Use this route for a project-local skills directory or a client that cannot install plugins. Choose either plugin installation or standalone skills to avoid duplicate entries. If you previously used this script, back up and move its ten installed skill folders out of your skill directory before switching to the plugin.
+Use this route for a project-local skills directory or a client that cannot install plugins. Choose either plugin installation or standalone skills to avoid duplicate entries. If you previously used this script, back up and move its eleven installed skill folders out of your skill directory before switching to the plugin.
 
 With Git and Node.js 22.18+ (22.x) or 24+ installed, run these commands in PowerShell, bash or zsh:
 
@@ -38,7 +38,7 @@ cd it-stack
 node scripts/install-codex.ts
 ```
 
-The installer copies all ten skill folders and their supporting files to `~/.agents/skills`, Codex's [user skill location](https://developers.openai.com/codex/skills/). No Claude Code installation or subscription is needed. Start with `$do-it`, or type `$fix-it`, `$build-it`, or `$run-it`. If the skills don't appear, restart Codex.
+The installer copies all eleven skill folders and their supporting files to `~/.agents/skills`, Codex's [user skill location](https://developers.openai.com/codex/skills/). No Claude Code installation or subscription is needed. Start with `$do-it`, or type `$fix-it`, `$build-it`, or `$run-it`. If the skills don't appear, restart Codex.
 
 For skills available only in one project, pass its skill directory instead:
 
@@ -46,9 +46,9 @@ For skills available only in one project, pass its skill directory instead:
 node scripts/install-codex.ts --dest "/path/to/project/.agents/skills"
 ```
 
-On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the ten previously installed it-stack folders out of the destination, then run the installer again. Keep the ten folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
+On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the eleven previously installed it-stack folders out of the destination, then run the installer again. Keep the eleven folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
 
-Every skill starts with an [optional dependency check](skills/ship-it/dependency-setup.md). It recognizes existing plugins and standalone skills, then offers to install missing Superpowers and Matt Pocock skills together. The offer shows their sources and installation scope and waits for your consent. This runs when an agent follows a skill, not when the plugin itself is installed.
+Except for direct stack-it calls (which discover visual skills and use fallbacks without an installation offer), skills start with an [optional dependency check](skills/ship-it/dependency-setup.md). It recognizes existing plugins and standalone skills, then offers to install missing Superpowers and Matt Pocock skills together. The offer shows their sources and installation scope and waits for your consent. This runs when an agent follows a skill, not when the plugin itself is installed.
 
 Choose **Install listed dependencies**, **Continue with fallbacks** for this task, or **Don't ask again for these dependencies**. The last choice is saved per client, plugin, source, and scope in `~/.it-stack/dependency-preferences.json`; new dependencies still get their own prompt. Ask to reconsider a dependency to revisit the choice. No installation approvals are stored. Declines, installation failures, unsupported clients, and installations requiring a restart use the existing fallbacks so your original task can continue. Delegated and unattended work never prompts or installs.
 
@@ -59,6 +59,7 @@ Choose **Install listed dependencies**, **Continue with fallbacks** for this tas
 | Skill | Job |
 | --- | --- |
 | ★ **`do-it`** | Start here. Reads any request and picks the right skill below. |
+| ★ **`stack-it`** | Establish or reconcile the tech stack, component sources and design system before web development; reuse decisions and verify rendered workflows. |
 | ★ **`fix-it`** | Bugs: reproduce, root cause, failing test first, fix, ship. |
 | ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR that closes it. |
 | ★ **`run-it`** | Turns the thread into a control room for the whole backlog: the plan first, then questions one at a time, inline by default or separate T3 sessions when selected, at most 3 PRs open, dependent issues start after merge. |

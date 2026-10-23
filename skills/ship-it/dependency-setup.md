@@ -2,6 +2,8 @@
 
 Run this check at the start of every it-stack entry point, before its workflow. This is an agent-guided consent flow, not an install-time hook. Check once per top-level task; sibling skills reuse the result. A direct call to any skill must run it too.
 
+Exception: direct `stack-it` calls discover available skills and use direct fallbacks without an installation offer. Its visual skills (`frontend-design`, `better-interface`, `webapp-testing`) are not part of this consent flow; missing visual skills never trigger installation prompts. Existing owner instructions declining installation take precedence throughout.
+
 ## 1. Discover what is available
 
 Use the current client's skill catalog and [local skill lookup](project-facts.md#using-skills-across-clients). Check the skills below, not just a plugin folder or cached download. Equivalent standalone installations count. Do not upgrade, replace, or enable an existing disabled plugin as part of discovery.

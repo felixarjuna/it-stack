@@ -1,6 +1,6 @@
 {
   "name": "it-stack",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Felix's agent skill stack: <verb>-it skills that plan, build, prove and ship work as PRs you can judge in a minute, and run a whole issue backlog from one control room.",
   "author": {
     "name": "Felix Arjuna",

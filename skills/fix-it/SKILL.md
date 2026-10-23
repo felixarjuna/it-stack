@@ -21,6 +21,8 @@ Use `superpowers:systematic-debugging`. Reproduce the problem first, the way the
 
 ## 3. Test first
 
+For a visible fix, consult [stack-it](../stack-it/SKILL.md) and reuse the existing design contract; amend only affected decisions. Do not turn a bugfix into a redesign. Backend-only fixes skip visual setup.
+
 Use `superpowers:test-driven-development`: write a test that fails because of the bug, run it, and see it fail for that reason. Then fix, run it green, and run the whole `check`.
 
 ## 4. Ship

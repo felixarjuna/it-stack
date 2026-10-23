@@ -14,6 +14,7 @@ For Codex and Claude Code invocation and optional skill lookup, follow [Using sk
 | The request is… | Use |
 | --- | --- |
 | something broken, wrong, failing or a bug report | `fix-it` |
+| configure the tech stack, component libraries or design system before development | `stack-it` |
 | an issue number, or a feature clear enough to build | `build-it` |
 | an idea, a vague feature, or an issue with open decisions | `plan-it`, then `build-it` once the brief is written |
 | the backlog: "all the issues", "run the issues", "what's next" | `run-it` |
