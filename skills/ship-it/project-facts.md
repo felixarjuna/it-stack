@@ -10,6 +10,8 @@ For optional skills such as `superpowers:test-driven-development` or `mattpocock
 
 ## Format
 
+For visual skills requested by stack-it or prove-it, use their direct fallbacks without installation prompts. Direct stack-it calls are exempt from generic dependency setup; other workflows reuse their existing setup result. See stack-it's fallback for coverage reporting.
+
 Five required keys plus optional execution/session preferences, one bullet each. A value can run over several lines; keep it to what an agent needs to act.
 
 ```markdown
@@ -21,17 +23,19 @@ Five required keys plus optional execution/session preferences, one bullet each.
 - **merge:** `--squash --delete-branch`. After merge, CI applies migrations to production; until then the new release can fail on new columns.
 - **private:** screenshots show seed data only, never production. Security problems go to private advisories, never public issues or PRs.
 - **execution:** inline (optional; use `sessions` to request separate T3 sessions).
+- **design-system:** `docs/design-system.md` (optional; stack, component sources, tokens, interaction patterns and visual acceptance).
 - **sessions:** current provider and model (optional; or name a specific provider instance, model and supported options for run-it).
 ```
 
 ## When a key is missing
 
 - **check:** use the first of the `check`, `test`, `lint` scripts in `package.json` (or the language's usual test command), and write in the PR's Verification which command you assumed.
-- **screenshots:** treat as `none`. Describe what you saw in the running app instead, and say there's no screenshot setup.
+- **screenshots:** treat as no configured capture command. For visible changes, use an available browser to capture and inspect the running app, describing the method. If unavailable, explicitly report rendered verification as unverified; endpoint success is not visual proof. Follow prove-it.
 - **migrations:** look for a usual migrations folder (`migrations/`, `db/migrate/`, `prisma/migrations/`, `drizzle/`, `alembic/versions/`) and use it; a new file there means the change adds a migration. Found none: treat as "no migrations". Say which you assumed (in the PR's Verification, or to the owner in one line when no PR is involved).
 - **merge:** `--merge --delete-branch`.
 - **private:** never put secrets, real user data or security details in a PR, issue or commit; the repo may be public.
 - **execution:** inline. Preserve a recorded run mode on resume; an explicit owner choice overrides it.
+- **design-system:** reuse an existing equivalent contract, otherwise `docs/design-system.md`. Follow stack-it for new or affected web interfaces; backend-only work does not need a visual contract.
 - **sessions:** for external sessions/review agents, in Codex, the current provider instance and model, confirmed through `orchestrator_capabilities`; in Claude Code, Claude Opus 5.5 (`claude-opus-5-5` on `claudeAgent`). See run-it's model selection steps. Explicit owner choices take priority over this fact.
 
 When the whole section is missing, use these defaults and suggest adding the section in the PR's Scope.

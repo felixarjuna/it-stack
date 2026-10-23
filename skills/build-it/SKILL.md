@@ -30,6 +30,8 @@ Run-it already recorded a workspace and branch for this issue (external or inlin
 
 ## 4. Build
 
+Before feature code for a web app or visible interface change, follow [stack-it](../stack-it/SKILL.md). Reuse the existing design contract when current; reconcile stale component configuration and affected decisions first. Backend-only work skips visual setup. This adds no approval gate and preserves standing owner decisions.
+
 Test first: use `superpowers:test-driven-development` for each behaviour. Keep the change to what the issue asks; note follow-ups for the PR's Scope instead of building them. If the change adds a migration, follow the `migrations` fact.
 
 ## 5. Ship

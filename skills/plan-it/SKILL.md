@@ -27,7 +27,11 @@ Read the issue (or request) and the code it touches first; never ask what the co
 
 Skip anything a sensible builder can settle alone; settle it and say so in the brief.
 
+For web-app stack or interface decisions, use [stack-it](../stack-it/SKILL.md) to inspect and reuse the design contract. Reference that contract in Decisions rather than reopening settled choices. In batch mode, return only unresolved material questions; ordinary technical and visual choices remain the builder's call under existing authorization.
+
 ## Chat mode
+
+Carry forward approved plans and standing owner instructions. Brainstorming applies only to unresolved product decisions, not to reopening an approved design or requiring repeated approval after an explicit opt-out. Stack-it itself adds no approval gate; it does not remove an applicable caller requirement that the owner has not waived.
 
 - A new idea or feature: use `superpowers:brainstorming`.
 - An existing issue with gaps: use `mattpocock-skills:grilling` to work through them.
