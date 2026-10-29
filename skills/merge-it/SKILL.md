@@ -1,40 +1,38 @@
 ---
 name: merge-it
-description: Use when the owner says "merge" (one PR, several, or "them"). Confirms every check is green, merges with the project's method, deletes the branch, updates the local default branch and reports anything that still has to happen after the merge.
+description: Use when the owner explicitly asks to merge one or more pull requests or merge requests.
 ---
 
 # merge-it
 
-First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+First follow [platform setup](../ship-it/platforms/README.md), once per task. Resolve the full review identity before any remote operation.
+Follow [optional dependency setup](../ship-it/dependency-setup.md) and the project's [facts](../ship-it/project-facts.md).
 
-Merge only on the owner's word, and only green PRs.
+Merge only on the owner's word. Interpret PR/MR names through the selected Git host.
 
-Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).
+## 1. Resolve the requested reviews
 
-## 1. Which PRs
+"Merge" applies to the review(s) under discussion, not every open review. If ambiguous, show candidates and ask. Read each through Git host `reviews.read`; record the reviewed head and authorization. Process oldest first, one at a time.
 
-"Merge" means the PRs under discussion: the one just shipped, or every PR the owner was shown. If that's ambiguous, list the candidates in one line and ask.
+## 2. Check the current change
 
-## 2. Check each
+Use `reviews.checks`: evaluate CI, approvals, discussions, draft status, conflicts and platform mergeability separately, following the [contract](../ship-it/platforms/contracts.md).
 
-`gh pr checks <n>`.
+- Pending: wait in bounded intervals or report pending; an idle conversation is not a background watcher.
+- Failed or unknown: do not merge. Show the failure. For an inline change fix it in its recorded workspace; for an external worker send the details via its recorded harness. Verify and report the fix, then wait for the owner to approve the changed diff.
+- Absent CI: only explicit `ci: optional` plus passing local check permits proceeding, and server merge rules still apply.
+- Conflicts: rebase in the recorded workspace, verify, push and recheck. A rebase that only regenerates a migration or resolves an import clash can retain the same approval; behavior changes need renewed approval. Never discard uncommitted work.
 
-- **Still running:** wait for them (`gh pr checks <n> --watch`), then go on.
-- **Failed:** don't merge. Say which check failed and why in one line. Fix it (for an inline PR, in its recorded workspace; for an external worker, through its session: run-it's `fixing` path), then report the fix in one line and wait for the owner to say "merge" again: they approved the diff they saw, not your fix.
-- **Conflicts with the base:** rebase onto the default branch, re-run `check`, push, wait for green. A rebase that only regenerates a migration or resolves an import clash can merge on the same "merge"; anything that changes behaviour waits for the owner again, as above.
+## 3. Merge and confirm
 
-## 3. Merge
+Re-read head and eligibility immediately before Git host `reviews.merge`, supplying expected head and configured semantic merge/branch policy. Never bypass protections or silently switch merge strategy. A changed head needs inspection; an unrelated user's new changes are not covered by the old approval.
 
-Merge PRs one at a time, oldest first, using the `merge` fact's method. Supply explicit `--repo <owner/repo>` so the merge and remote branch deletion do not trigger local checkout/worktree cleanup (default `gh pr merge <n> --repo <owner/repo> --merge --delete-branch`). Keep local synchronization and cleanup in the guarded steps below. A later PR that conflicts after an earlier merge goes back to step 2.
+Read back remote state. Only confirmed merged state frees the slot; queued/auto-merge-enabled is not merged. Permission failures and stale-head errors retain the row. A later review that conflicts after an earlier merge returns to step 2.
 
-Then update the default branch in a clean checkout using a fast-forward-only pull. Preserve any dirty checkout and local-only commits; do not switch, reset or pull across them. If no safe checkout is available, leave local synchronization pending and report it. Delete merged local branches only after their worktrees are safely released.
+Update the default branch only in a clean checkout using a fast-forward-only pull from the selected remote. Preserve dirty checkouts and local-only commits. If no safe checkout exists, report synchronization pending.
 
-**Worktrees:** find the merged PR's recorded workspace by branch. Remove it only when its owner has released it and `git -C <path> status --porcelain` is empty. For external workers, confirm their T3 thread has stopped; if its status is unavailable, retain the worktree. For inline work, finish using the workspace and switch to a safe checkout before removal; do not remove the current workspace. T3-managed workspaces require the platform's supported cleanup; unmanaged ones can use `git worktree remove <path>`. Otherwise leave the workspace and report why. Never force removal of dirty work.
+For cleanup, find the recorded workspace by project/branch. Confirm worker ownership is released and lifecycle is known; then require `git -C <path> status --porcelain` to be empty. Use harness `release` for managed workspaces. For unmanaged worktrees use `git worktree remove <path>` only after switching away. Never force cleanup or remove the current workspace. Delete merged local branches only after safe release. A denied remote deletion is pending cleanup, not a failed merge.
 
-## 4. Report
+## 4. Continue and report
 
-One line per PR: merged, plus anything the `merge` fact says still happens after merge (a migration deploy, a release). Don't repeat what the PR already says.
-
-## In a run-it control room
-
-When this conversation owns the run (`.it-stack/run.md` names its T3 thread, or its matching local Run owner), continue with run-it's **On wake-up** steps after merging: free the slots and start the next issues.
+Report review URL and any remaining deploy/cleanup step from project facts. When this conversation owns a run, follow run-it's reconciliation: mark Done, refresh other reviews, then fill newly eligible slots. Never take ownership merely because a state file exists.

@@ -5,6 +5,8 @@ description: Use when a request or issue is unclear, before building it. Asks th
 
 # plan-it
 
+First follow [platform setup](../ship-it/platforms/README.md), once per task. Local work can continue with setup deferred; resolve required identity before remote operations.
+
 First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
 
 Nothing gets built on a guess. plan-it finds what's missing, asks, and writes the answers where the builder will read them: the issue.
@@ -38,7 +40,7 @@ Carry forward approved plans and standing owner instructions. Brainstorming appl
 
 ## Write the brief
 
-Add or update a `## Decisions` section on the issue (`gh issue edit <n> --body-file`, keeping the original text above it):
+Add or update a `## Decisions` section on the issue (Git host `issues.update`, keeping the original text above it):
 
 ```markdown
 ## Decisions

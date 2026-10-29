@@ -1,7 +1,7 @@
 {
   "name": "it-stack",
-  "version": "0.4.0",
-  "description": "Felix's agent skill stack: <verb>-it skills that plan, build, prove and ship work as PRs you can judge in a minute, and run a whole issue backlog from one control room.",
+  "version": "0.5.0",
+  "description": "Plan, build, verify and ship with independently configurable Git hosts and harnesses.",
   "author": {
     "name": "Felix Arjuna",
     "url": "https://github.com/felixarjuna"
@@ -9,5 +9,13 @@
   "homepage": "https://github.com/felixarjuna/it-stack",
   "repository": "https://github.com/felixarjuna/it-stack",
   "license": "MIT",
-  "keywords": ["skills", "workflow", "pull-requests", "backlog", "t3-code"]
+  "keywords": [
+    "skills",
+    "workflow",
+    "github",
+    "gitlab",
+    "t3-code",
+    "paseo",
+    "backlog"
+  ]
 }

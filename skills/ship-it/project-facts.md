@@ -12,17 +12,22 @@ For optional skills such as `superpowers:test-driven-development` or `mattpocock
 
 For visual skills requested by stack-it or prove-it, use their direct fallbacks without installation prompts. Direct stack-it calls are exempt from generic dependency setup; other workflows reuse their existing setup result. See stack-it's fallback for coverage reporting.
 
-Five required keys plus optional execution/session preferences, one bullet each. A value can run over several lines; keep it to what an agent needs to act.
+Project workflow facts plus independent Git host and Harness settings, one bullet each. A value can run over several lines; keep it to what an agent needs to act.
 
 ```markdown
 ## it-stack
 
+- **git-host:** auto (or github/gitlab; custom host identity comes from the selected remote).
+- **harness:** auto (or t3/paseo; independent of Git host).
+- **setup:** complete (or deferred; first-use onboarding only).
 - **check:** `npm run check` (lint, types, unit tests). Must pass before any PR.
 - **screenshots:** `npm run test:e2e:db`, then write `e2e/shots/current.shots.ts` (sign in with `signInAs(page, "member")`, seed rows with `seed.order()`), run `npm run shots`, and after pushing `npm run shots:publish`, which prints the PR's Screenshots table.
 - **migrations:** `db/migrations/`, made with `npm run db:generate`. Only one open PR may add a migration; after rebasing onto a new one, delete yours and regenerate.
-- **merge:** `--squash --delete-branch`. After merge, CI applies migrations to production; until then the new release can fail on new columns.
+- **merge:** squash. After merge, CI applies migrations to production; until then the new release can fail on new columns.
+- **delete-branch:** true.
+- **ci:** required (optional permits absent CI only when local checks pass).
 - **private:** screenshots show seed data only, never production. Security problems go to private advisories, never public issues or PRs.
-- **execution:** inline (optional; use `sessions` to request separate T3 sessions).
+- **execution:** inline (optional; use `sessions` to request separate sessions through the selected harness).
 - **design-system:** `docs/design-system.md` (optional; stack, component sources, tokens, interaction patterns and visual acceptance).
 - **sessions:** current provider and model (optional; or name a specific provider instance, model and supported options for run-it).
 ```
@@ -32,10 +37,13 @@ Five required keys plus optional execution/session preferences, one bullet each.
 - **check:** use the first of the `check`, `test`, `lint` scripts in `package.json` (or the language's usual test command), and write in the PR's Verification which command you assumed.
 - **screenshots:** treat as no configured capture command. For visible changes, use an available browser to capture and inspect the running app, describing the method. If unavailable, explicitly report rendered verification as unverified; endpoint success is not visual proof. Follow prove-it.
 - **migrations:** look for a usual migrations folder (`migrations/`, `db/migrate/`, `prisma/migrations/`, `drizzle/`, `alembic/versions/`) and use it; a new file there means the change adds a migration. Found none: treat as "no migrations". Say which you assumed (in the PR's Verification, or to the owner in one line when no PR is involved).
-- **merge:** `--merge --delete-branch`.
+- **merge:** project-default; see [operation contracts](platforms/contracts.md). Existing GitHub projects with no explicit method retain the legacy merge method when compatible.
+- **delete-branch:** true.
+- **ci:** required; absent or unknown CI is not success.
+- **git-host / harness:** follow [platform setup](platforms/README.md); Auto detects independently. No harness is required for inline work.
 - **private:** never put secrets, real user data or security details in a PR, issue or commit; the repo may be public.
 - **execution:** inline. Preserve a recorded run mode on resume; an explicit owner choice overrides it.
 - **design-system:** reuse an existing equivalent contract, otherwise `docs/design-system.md`. Follow stack-it for new or affected web interfaces; backend-only work does not need a visual contract.
-- **sessions:** for external sessions/review agents, in Codex, the current provider instance and model, confirmed through `orchestrator_capabilities`; in Claude Code, Claude Opus 5.5 (`claude-opus-5-5` on `claudeAgent`). See run-it's model selection steps. Explicit owner choices take priority over this fact.
+- **sessions:** resolve current provider/model/options through the selected harness adapter. Preserve explicit choices and recorded run selections; unavailable choices require a decision, never silent substitution. See [model contract](platforms/contracts.md).
 
-When the whole section is missing, use these defaults and suggest adding the section in the PR's Scope.
+When the whole section is missing, use setup-it for first-use platform choices and these workflow defaults for independent local work. Do not guess remote identity. Existing GitHub merge flag strings remain accepted by the GitHub adapter only.

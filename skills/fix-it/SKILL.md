@@ -5,6 +5,8 @@ description: Use when something is broken, wrong or failing. Reproduces it, find
 
 # fix-it
 
+First follow [platform setup](../ship-it/platforms/README.md), once per task. Local work can continue with setup deferred; resolve required identity before remote operations.
+
 First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
 
 Fix the cause, not the symptom, and prove it stays fixed.

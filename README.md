@@ -2,7 +2,7 @@
 
 Felix's agent skill stack for Claude Code and Codex. Every skill is a verb with `-it` on the end.
 
-The idea: you say what you want, answer the agent's questions once, and get back pull requests you can judge in a minute from the PR page, each with a short briefing and phone and desktop screenshots. You say "merge", and the next piece of work starts. Nothing merges without you.
+The idea: you say what you want, answer the agent's questions once, and get back pull requests or merge requests you can judge in a minute from their review page, each with a short briefing and phone and desktop screenshots. You say "merge", and the next piece of work starts. Nothing merges without you.
 
 ## Install
 
@@ -24,11 +24,11 @@ codex plugin add it-stack@it-stack
 
 Start a new Codex session after installation. You can also enter `/plugins` in Codex CLI to browse and install from the configured marketplace. These are Codex's [native plugin commands](https://learn.chatgpt.com/docs/cli/reference#codex-plugin); use a current CLI version if your installation doesn't recognize them.
 
-Codex supports the repo's existing Claude-compatible plugin and marketplace manifests, so both clients install the same eleven skills and supporting files. No manual clone, Node.js setup, or installer script is needed for this route. Start with `$do-it`, or select a skill from Codex's skill picker.
+Codex supports the repo's existing Claude-compatible plugin and marketplace manifests, so both clients install the same twelve skills and supporting files. No manual clone, Node.js setup, or installer script is needed for this route. Start with `$do-it`, or select a skill from Codex's skill picker.
 
 ### Optional: standalone Codex skills
 
-Use this route for a project-local skills directory or a client that cannot install plugins. Choose either plugin installation or standalone skills to avoid duplicate entries. If you previously used this script, back up and move its eleven installed skill folders out of your skill directory before switching to the plugin.
+Use this route for a project-local skills directory or a client that cannot install plugins. Choose either plugin installation or standalone skills to avoid duplicate entries. If you previously used this script, back up and move its twelve installed skill folders out of your skill directory before switching to the plugin.
 
 With Git and Node.js 22.18+ (22.x) or 24+ installed, run these commands in PowerShell, bash or zsh:
 
@@ -38,7 +38,7 @@ cd it-stack
 node scripts/install-codex.ts
 ```
 
-The installer copies all eleven skill folders and their supporting files to `~/.agents/skills`, Codex's [user skill location](https://developers.openai.com/codex/skills/). No Claude Code installation or subscription is needed. Start with `$do-it`, or type `$fix-it`, `$build-it`, or `$run-it`. If the skills don't appear, restart Codex.
+The installer copies all twelve skill folders and their supporting files to `~/.agents/skills`, Codex's [user skill location](https://developers.openai.com/codex/skills/). No Claude Code installation or subscription is needed. Start with `$do-it`, or type `$fix-it`, `$build-it`, or `$run-it`. If the skills don't appear, restart Codex.
 
 For skills available only in one project, pass its skill directory instead:
 
@@ -46,7 +46,7 @@ For skills available only in one project, pass its skill directory instead:
 node scripts/install-codex.ts --dest "/path/to/project/.agents/skills"
 ```
 
-On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the eleven previously installed it-stack folders out of the destination, then run the installer again. Keep the eleven folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
+On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the twelve previously installed it-stack folders out of the destination, then run the installer again. Keep the twelve folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
 
 Except for direct stack-it calls (which discover visual skills and use fallbacks without an installation offer), skills start with an [optional dependency check](skills/ship-it/dependency-setup.md). It recognizes existing plugins and standalone skills, then offers to install missing Superpowers and Matt Pocock skills together. The offer shows their sources and installation scope and waits for your consent. This runs when an agent follows a skill, not when the plugin itself is installed.
 
@@ -58,31 +58,62 @@ Choose **Install listed dependencies**, **Continue with fallbacks** for this tas
 
 | Skill | Job |
 | --- | --- |
+| ★ **`setup-it`** | Configure Git host and Harness independently; offered automatically on first use. |
 | ★ **`do-it`** | Start here. Reads any request and picks the right skill below. |
 | ★ **`stack-it`** | Establish or reconcile the tech stack, component sources and design system before web development; reuse decisions and verify rendered workflows. |
 | ★ **`fix-it`** | Bugs: reproduce, root cause, failing test first, fix, ship. |
-| ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR that closes it. |
-| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: the plan first, then questions one at a time, inline by default or separate T3 sessions when selected, at most 3 PRs open, dependent issues start after merge. |
+| ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR/MR that closes it. |
+| ★ **`run-it`** | Turns the thread into a control room for the whole backlog: the plan first, then questions one at a time, inline by default or separate sessions through T3 Code or Paseo when selected, at most 3 open reviews, dependent issues start after merge. |
 | **`plan-it`** | Turns an unclear idea or issue into a brief: asks what is missing, writes the answers into the issue. |
 | **`sort-it`** | Sorts open issues against the code: ready, needs answers, too big, already done, security. Produces the plan and the questions, most important first. |
 | **`split-it`** | Breaks work too big for one PR into small issues with "Blocked by" links. |
 | **`prove-it`** | Proves the change in the running app the way a user would, with phone and desktop screenshots it checks before using. |
-| **`ship-it`** | Check → commit → push → a PR that explains itself (Why, What changed, Scope, Verification, screenshots). Never merges. |
+| **`ship-it`** | Check → commit → push → a PR/MR that explains itself (Why, What changed, Scope, Verification, screenshots). Never merges. |
 | **`merge-it`** | On "merge": confirms checks are green, merges, cleans up, says what happens after. Never merges on its own. |
 
-## Set up a project
+## Git host and Harness setup
 
-The skills know nothing about your project until it tells them. Add an `## it-stack` section to its `AGENTS.md` (Codex) or `CLAUDE.md` (Claude Code) with five facts: the `check` command, how to take `screenshots`, where `migrations` live, how to `merge`, and what's `private`. The [format, an example and the defaults](skills/ship-it/project-facts.md) are in ship-it. If you use `run-it`, add `.it-stack/` to `.gitignore`.
+Choose these independently. **Git host** is GitHub or GitLab (including self-managed instances); **Harness** is where coding sessions run, such as T3 Code or Paseo. The coding agent/model is a separate choice. Every Git host supports either harness or inline execution.
+
+On first use, the skills inspect your repository and session, then offer to confirm or change Git host and Harness. Existing settings are reused. `setup-it` revisits configuration; choose Auto to detect each time, or configure later to continue local work. Native plugin installation/file copying cannot itself guarantee an interactive prompt, so first use is the common setup path. The standalone installer offers setup in an interactive terminal.
+
+Project settings live in the applicable `AGENTS.md` or `CLAUDE.md`:
+
+```markdown
+## it-stack
+
+- **git-host:** gitlab
+- **harness:** paseo
+- **setup:** complete
+- **execution:** inline
+- **check:** npm test
+- **merge:** project-default
+- **ci:** required
+```
+
+This is an example combination, not a preset. GitHub/Paseo and GitLab/T3 use the same workflow. Inline execution needs no external harness; choosing one does not authorize session launches. See the [compatibility matrix and adapter guide](skills/ship-it/platforms/compatibility.md).
+
+Explicit task choices override project facts. Unambiguous environment detection precedes optional user defaults in `~/.it-stack/config.json`; conflicting identity is surfaced before remote work. Configure custom GitLab identity from its full remote/hostname, including nested namespaces. Authentication stays with the Git host tools; never put tokens in skill configuration.
+
+For scripted installation:
+
+```sh
+node scripts/install-codex.ts --dest /path/to/project/.agents/skills --git-host gitlab --harness paseo --project-file /path/to/project/AGENTS.md
+```
+
+For a destination ending in `<project>/.agents/skills`, setup targets that project, not the installer's working directory. A global installation offers user defaults; `--setup-scope user` selects that scope explicitly, and `--project-file` selects an exact project instruction file. `--skip-setup` installs without prompting or writing preferences. Noninteractive installation without explicit setup options also defers setup. Delegated workers inherit their control room's settings and never prompt. Run `node scripts/install-codex.ts --help` for options. If setup fails after the skill copy, the installation remains available: fix settings through `setup-it`, rather than overwriting installed folders.
+
+Add project facts for screenshots, migrations, merge/deployment behavior, and private data as appropriate. See [format and defaults](skills/ship-it/project-facts.md). Optional dependency installation is a separate consent flow; platform setup does not authorize installing other plugins. If you use `run-it`, add `.it-stack/` to `.gitignore`.
 
 ## The control room
 
-`run-it` keeps the backlog in the current thread: it sorts issues, asks unresolved questions, and tracks work through review and merge. The default is **inline** execution with Superpowers planning, test-driven development and verification when installed. This is useful for sequential or tightly coupled issues. Each issue still gets a small PR; dependent work waits for its prerequisite PR to merge. Without Superpowers, the same steps have an inline fallback.
+`run-it` sorts issues, asks unresolved questions, and tracks work through review and merge. **Inline** is the default: the current session implements one issue at a time. Choose **sessions** explicitly or through project configuration to launch independent workers in separate T3 Code or Paseo workspaces. Both modes retain the default limits of three open reviews and one active migration, and never merge without your instruction.
 
-Choose **sessions** when you want independent issues built in separate T3 Code worktrees. Only this mode requires T3 orchestration tools. Both modes keep the limit of 3 open PRs and 1 active migration, and never merge without your instruction. Execution mode is recorded for resume; switching to inline lets existing workers finish without launching replacements.
+The selected harness resolves provider/model/options from its actual capabilities. Explicit choices and recorded selections are preserved; unavailable models are reported rather than substituted. Inline work uses the current conversation's model.
 
-For separate sessions or reviewers, Codex resolves the current provider/model and compatible options from T3's live catalog; Claude Code retains its Claude Opus 5.5 default. Your explicit choice or the project's optional `sessions` fact overrides those defaults. The optional `execution` fact selects inline or sessions. Inline work uses the current conversation's model.
+Every combination refreshes remote state on start/resume, worker reports and your messages. Compatible installed integrations can add automatic notifications, such as T3's GitHub watches. Without one, an external merge is noticed on the next activity; an idle conversation is not a background poller. Missing optional watches do not prevent GitLab/T3 or GitHub/Paseo work.
 
-With T3, PR watches can wake the run. Without T3, inline mode resumes on your next message rather than promising background execution.
+Run state records the full project, harness, workers, model choices and workspace paths. Switching to inline preserves existing workers. Legacy state is backed up and migrated without relaunching workers; changing the Git host or harness during active work requires an explicit migration decision. See [run-state migration](skills/run-it/run-file.md).
 
 ## Development
 
