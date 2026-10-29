@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { createInterface } from "node:readline/promises";
 import { existsSync } from "node:fs";
-import { parseSettings, saveSettings, type Settings } from "../skills/setup-it/config.ts";
+import { parseSettings, readSettings, saveSettings, type Settings } from "../skills/setup-it/config.ts";
 
 const usage = `Usage: node scripts/install-codex.ts [--dest <skills-directory>] [setup options]
 
@@ -40,14 +40,28 @@ async function setup(options: ReturnType<typeof parseSettings>): Promise<void> {
   scope ??= path ? 'project' : 'user';
   if (scope === 'project' && !path) throw new Error('Project setup needs a repository or --project-file');
   path = scope === 'user' ? join(homedir(), '.it-stack', 'config.json') : path!;
-  const settings: Settings = { ...options.settings };
+  const previous = readSettings(path, scope);
+  if (!explicit && previous.setup) return;
+  const settings: Settings = { ...previous, ...options.settings };
   if (!explicit) {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
     try {
       const answer = await rl.question(`Configure Git host and Harness in ${path}? [y/N] `);
       if (answer.trim().toLowerCase() !== 'y') return;
-      const host = (await rl.question('Git host [auto/github/gitlab] (auto): ')).trim() || 'auto';
-      const harness = (await rl.question('Harness — where sessions run [auto/t3/paseo] (auto): ')).trim() || 'auto';
+      let detectedHost = 'auto';
+      try {
+        const remotes = execFileSync('git', ['remote'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim().split('\n');
+        if (remotes.length === 1 && remotes[0]) {
+          const remote = execFileSync('git', ['remote', 'get-url', remotes[0]], { encoding: 'utf8' }).trim();
+          const host = /^(?:https?:\/\/|ssh:\/\/)?(?:[^/@]+@)?([^/:]+)[/:]/.exec(remote)?.[1];
+          if (host === 'github.com') detectedHost = 'github';
+          else if (host === 'gitlab.com') detectedHost = 'gitlab';
+        }
+      } catch { /* First-use setup can resolve custom hosts later. */ }
+      const hostDefault = previous['git-host'] ?? detectedHost;
+      const harnessDefault = previous.harness ?? (process.env.PASEO_AGENT_ID ? 'paseo' : 'auto');
+      const host = previous['git-host'] ?? ((await rl.question(`Git host [auto/github/gitlab] (${hostDefault}): `)).trim() || hostDefault);
+      const harness = previous.harness ?? ((await rl.question(`Harness — where sessions run [auto/t3/paseo] (${harnessDefault}): `)).trim() || harnessDefault);
       Object.assign(settings, parseSettings(['--git-host', host, '--harness', harness]).settings);
     } finally { rl.close(); }
   }

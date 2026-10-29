@@ -6,7 +6,7 @@
  *   node scripts/validate.ts [root]
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SKILL_NAME = /^[a-z]+-it$/;
@@ -120,6 +120,30 @@ const checkPrivateText = (root: string): string[] =>
       );
     });
 
+/** Runtime resources must travel with the skill package; platform calls stay in adapters. */
+const checkResources = (root: string): string[] => {
+  const skills = join(root, 'skills');
+  if (!existsSync(skills)) return [];
+  const problems: string[] = [];
+  const hasPlatforms = existsSync(join(skills, 'ship-it/platforms/README.md'));
+  for (const path of filesUnder(skills).filter(p => p.endsWith('.md'))) {
+    const body = read(path);
+    for (const [, link] of body.matchAll(/\]\(([^\s)]+)\)/g)) {
+      if (/^(?:[a-z]+:|#)/i.test(link)) continue;
+      const target = link.split('#')[0];
+      if (!existsSync(resolve(dirname(path), target))) problems.push(`${relative(root, path)}: missing resource ${target}`);
+    }
+    if (!hasPlatforms || path.includes(`${join('ship-it', 'platforms')}`)) continue;
+    if (/\b(?:gh (?:pr|issue|api)|glab (?:mr|issue|api)|t3_thread_\w+|paseo (?:run|send|ls|workspace)|(?:link|watch|unwatch)_pull_request)\b/.test(body)) {
+      problems.push(`${relative(root, path)}: platform command belongs in an adapter`);
+    }
+    if (path.endsWith('SKILL.md') && !path.endsWith(join('setup-it', 'SKILL.md')) && !body.includes('[platform setup]')) {
+      problems.push(`${relative(root, path)}: missing platform setup entry point`);
+    }
+  }
+  return problems;
+};
+
 /** Every problem in the stack at `root`; empty when it's fine to ship. */
 export const validate = (root: string): string[] => {
   const readme = existsSync(join(root, "README.md"))
@@ -135,6 +159,7 @@ export const validate = (root: string): string[] => {
     ...checkManifests(root),
     ...(readme ? [] : ["README.md is required"]),
     ...folders.flatMap((folder) => checkSkill(root, folder, readme)),
+    ...checkResources(root),
     ...checkPrivateText(root),
   ];
 };

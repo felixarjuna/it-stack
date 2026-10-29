@@ -56,14 +56,43 @@ export function resolveSettings(layers: {
   const settings: Settings = {};
   const conflicts: string[] = [];
   for (const key of ['git-host', 'harness'] as const) {
-    const values = [layers.explicit?.[key], layers.project?.[key], layers.detected?.[key], layers.defaults?.[key]];
+    const preference = layers.explicit?.[key] ?? layers.project?.[key];
+    const values = [preference, layers.detected?.[key], layers.defaults?.[key]];
     const value = values.find(v => v && v !== 'auto') ?? 'auto';
     Object.assign(settings, { [key]: value });
     const detected = layers.detected?.[key];
-    const preferred = [layers.explicit?.[key], layers.project?.[key], layers.defaults?.[key]].find(v => v && v !== 'auto');
+    const preferred = preference && preference !== 'auto' ? preference : (!preference ? layers.defaults?.[key] : undefined);
     if (detected && detected !== 'auto' && preferred && preferred !== detected) conflicts.push(key);
   }
   return { settings, conflicts };
+}
+
+export function readSettings(path: string, scope: Scope): Settings {
+  if (!existsSync(path)) return {};
+  const text = readFileSync(path, 'utf8');
+  let data: Record<string, unknown>;
+  if (scope === 'user') {
+    const parsed: unknown = JSON.parse(text);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('Configuration must be a JSON object');
+    data = parsed as Record<string, unknown>;
+  } else {
+    const sections = [...text.matchAll(/^## it-stack\s*$/gm)];
+    if (sections.length > 1) throw new Error('Multiple it-stack sections; reconcile before setup');
+    if (!sections.length) return {};
+    const section = text.slice(sections[0].index! + sections[0][0].length).split(/^#{1,2} /m)[0];
+    data = {};
+    for (const [, key, value] of section.matchAll(/^- \*\*(git-host|harness|setup):\*\*\s*([^\r\n]*)/gm)) {
+      if (key in data) throw new Error(`Duplicate ${key} facts`);
+      data[key] = value.trim().split(/[\s(]/)[0];
+    }
+  }
+  const result: Settings = {};
+  for (const key of Object.keys(choices) as (keyof Settings)[]) {
+    if (!(key in data)) continue;
+    if (!(choices[key] as readonly unknown[]).includes(data[key])) throw new Error(`Invalid stored ${key}`);
+    Object.assign(result, { [key]: data[key] });
+  }
+  return result;
 }
 
 export function updateProjectFacts(text: string, settings: Settings): string {

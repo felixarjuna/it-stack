@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { mkdtempSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { parseSettings, resolveSettings, saveSettings, updateProjectFacts } from '../skills/setup-it/config.ts';
+import { parseSettings, readSettings, resolveSettings, saveSettings, updateProjectFacts } from '../skills/setup-it/config.ts';
 
 test('independent selections cover both hosts and harnesses without changing execution', () => {
   for (const host of ['github', 'gitlab']) for (const harness of ['t3', 'paseo', 'auto']) {
@@ -21,10 +21,22 @@ test('explicit/project selections win; auto detects; conflicting user defaults a
     { 'git-host': 'gitlab', harness: 'paseo' });
   assert.equal(resolveSettings({ explicit: { harness: 't3' }, project: { harness: 'paseo' } }).settings.harness, 't3');
   assert.equal(resolveSettings({ project: { harness: 'auto' }, detected: { harness: 'paseo' } }).settings.harness, 'paseo');
+  assert.equal(resolveSettings({ explicit: { harness: 'auto' }, project: { harness: 't3' }, detected: { harness: 'paseo' } }).settings.harness, 'paseo');
   const conflict = resolveSettings({ detected: { 'git-host': 'gitlab' }, defaults: { 'git-host': 'github' } });
   assert.equal(conflict.settings['git-host'], 'gitlab');
   assert.deepEqual(conflict.conflicts, ['git-host']);
   assert.deepEqual(resolveSettings({}).settings, { 'git-host': 'auto', harness: 'auto' });
+});
+
+test('reading settings preserves complete/deferred setup and rejects invalid stored values', (t) => {
+  const dir = mkdtempSync(join(tmpdir(), 'it-stack-read-'));
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  const path = join(dir, 'AGENTS.md');
+  assert.deepEqual(readSettings(path, 'project'), {});
+  writeFileSync(path, '# Instructions\n## it-stack\n- **setup:** deferred\n- **harness:** paseo\n## Other\n- **harness:** t3\n');
+  assert.deepEqual(readSettings(path, 'project'), { setup: 'deferred', harness: 'paseo' });
+  writeFileSync(path, '## it-stack\n- **git-host:** unsupported\n');
+  assert.throws(() => readSettings(path, 'project'), /Invalid/);
 });
 
 test('editing project facts preserves multiline facts, following headings, and CRLF', () => {
