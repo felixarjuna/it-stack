@@ -57,6 +57,21 @@ test("noninteractive installation defers setup and points to setup-it", (t) => {
   assert.equal(existsSync(join(root, 'AGENTS.md')), false);
 });
 
+test('project-local destination determines setup scope rather than the installer checkout', (t) => {
+  const root = temporary(t);
+  const installer = join(root, 'installer');
+  const project = join(root, 'application');
+  mkdirSync(installer);
+  mkdirSync(project);
+  for (const directory of [installer, project]) {
+    assert.equal(spawnSync('git', ['init', '-q', directory]).status, 0);
+  }
+  const result = run(installer, '--dest', join(project, '.agents', 'skills'), '--git-host', 'gitlab', '--harness', 'paseo');
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(existsSync(join(installer, 'AGENTS.md')), false);
+  assert.match(readFileSync(join(project, 'AGENTS.md'), 'utf8'), /\*\*git-host:\*\* gitlab/);
+});
+
 test("checks all conflicts before copying and preserves existing skills", (t) => {
   const root = temporary(t);
   const dest = join(root, "skills");

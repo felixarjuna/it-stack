@@ -1,6 +1,6 @@
 # Composable it-stack across Git hosts and harnesses
 
-Status: proposed for owner approval. No implementation yet.
+Status: approved by the owner; implemented on feat/composable-platforms. See the implementation plan and docs/testing/platforms.md for verification and limits.
 
 ## Intent and decisions
 

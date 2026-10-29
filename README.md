@@ -101,7 +101,7 @@ For scripted installation:
 node scripts/install-codex.ts --dest /path/to/project/.agents/skills --git-host gitlab --harness paseo --project-file /path/to/project/AGENTS.md
 ```
 
-`--setup-scope user` saves user defaults instead. `--skip-setup` installs without prompting or writing preferences. Noninteractive installation without explicit setup options also defers setup. Delegated workers inherit their control room's settings and never prompt. Run `node scripts/install-codex.ts --help` for options. If setup fails after the skill copy, the installation remains available: fix settings through `setup-it`, rather than overwriting installed folders.
+For a destination ending in `<project>/.agents/skills`, setup targets that project, not the installer's working directory. A global installation offers user defaults; `--setup-scope user` selects that scope explicitly, and `--project-file` selects an exact project instruction file. `--skip-setup` installs without prompting or writing preferences. Noninteractive installation without explicit setup options also defers setup. Delegated workers inherit their control room's settings and never prompt. Run `node scripts/install-codex.ts --help` for options. If setup fails after the skill copy, the installation remains available: fix settings through `setup-it`, rather than overwriting installed folders.
 
 Add project facts for screenshots, migrations, merge/deployment behavior, and private data as appropriate. See [format and defaults](skills/ship-it/project-facts.md). Optional dependency installation is a separate consent flow; platform setup does not authorize installing other plugins. If you use `run-it`, add `.it-stack/` to `.gitignore`.
 

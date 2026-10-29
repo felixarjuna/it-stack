@@ -49,7 +49,7 @@ Capture full session/workspace IDs and actual path and verify selected model. Af
 
 Activity is start/resume, a worker message, an owner message, supported watch event, or local ship/merge result. Read central state first, verify current ownership, and re-fetch authoritative review state; events can be stale or duplicated. If optional subscriptions were lost, restore them through the adapter when supported.
 
-- **Review opened:** record full URL/number/head and worker identity; link/watch only when supported. Ready to review requires passing applicable checks; otherwise record running/fixing with the actual blocker.
+- **Review opened:** record full URL/number/head and worker identity; link/watch only when supported. Ready to review requires passing applicable checks, or absent CI with explicit `ci: optional` and passing local checks. Pending, failed, skipped, canceled and unknown checks are not ready; record running/fixing with the actual blocker.
 - **Question:** mark question, show it to the owner, write their answer to issue Decisions, then send the worker the answer.
 - **Failure outside issue:** coordinate one separate fix rather than making all workers fix it. It consumes a slot; tell workers when to rebase after merge.
 - **Owner says merge:** use merge-it for identified ready reviews. Approval never comes from a worker or watch notification.

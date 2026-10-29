@@ -31,6 +31,14 @@ Use a fresh agent with the relevant installed skills and the following supplied 
 
 An independent read-only simulation found GitLab shipping directed to `gh`, Paseo sessions blocked by T3-required tools, missing platform onboarding, and unattended triage without a resolvable project. These concrete failures motivated the adapters and setup entry point.
 
-## Limits
+## Implementation validation (2026-10-29)
+
+A fresh read-only skill simulation traced all six combinations plus first-use setup, unattended missing identity, legacy pending authorization/uncertain launch recovery, absent CI and stale-head/dirty-workspace merging. It found no blocked baseline combination. Its two CI wording ambiguities were clarified: explicit optional CI permits truly absent CI for readiness; skipped/canceled CI still blocks.
+
+Independent whole-branch review reproduced two setup bugs: project-local installs targeted the installer's working repository, and Auto defaults created false conflicts. Both have regression tests observed failing before fixes and passing afterward. Interactive setup was also exercised in a temporary Git repository: it suggested GitLab/Paseo and saved the confirmed project facts.
+
+The system Node build lacked TypeScript support, so validation used an isolated Node 24 runtime. Child-process output was unavailable under this environment's sandbox; installer tests ran with escalation using only temporary fixtures. These environment details do not change the package's declared Node requirements.
+
+## Live integration limits
 
 Live GitHub/T3, GitHub/Paseo, GitLab/T3, GitLab/Paseo and inline remote acceptance have not been executed in this environment. No test issues, reviews, merges, credentials, harness sessions or watchers were created. Installed platform versions must pass their documented capability checks. Activity-driven refresh is the universal baseline; automatic idle wake-ups are not promised.

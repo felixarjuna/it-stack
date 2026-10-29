@@ -1,6 +1,6 @@
 # Composable Platforms Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Make Git hosts and harnesses independently selectable, with guided setup and portable existing workflows.
 
@@ -32,9 +32,9 @@
 
 **Interfaces:** config.ts exports parseSettings(args), updateProjectFacts(text, settings), resolveSettings(layers), saveSettings(path, settings, scope). Settings use `git-host: auto|github|gitlab`, `harness: auto|t3|paseo`, `setup: complete|deferred`. Existing execution policy stays separate. CLI accepts --git-host, --harness, --setup-scope user|project, --project-file, --skip-setup. Only explicit setup options write settings; interactive installer offers setup after copying. First-use skill resolves missing context and saves with normal agent editing tools without requiring Node.
 
-- [ ] Write tests for resolution, preserving multiline facts/CRLF/unrelated content, malformed config, installer explicit settings and noninteractive defaults; run to see expected failures.
-- [ ] Implement helper and installer behavior, add concise setup skill based on baseline scenarios.
-- [ ] Verify recursive installation fidelity and config tests; commit.
+- [x] Write tests for resolution, preserving multiline facts/CRLF/unrelated content, malformed config, installer explicit settings and noninteractive defaults; run to see expected failures.
+- [x] Implement helper and installer behavior, add concise setup skill based on baseline scenarios.
+- [x] Verify recursive installation fidelity and config tests; commit.
 
 ### Task 2: Platform contracts and adapters
 
@@ -42,9 +42,9 @@
 
 **Interfaces:** named Git host operations `project`, `issues.list/read/create/update/comment/close`, `reviews.list/read/create/update/comments/checks/merge`; harness operations `identify/capabilities/launch/list/read/send/release` with optional `link/watch/unwatch`. Capability failure is distinct from task state. Documentation defines record fields, selection precedence and baseline refresh.
 
-- [ ] Add failing resource-integrity/packaging tests and six-combination scenario fixtures.
-- [ ] Implement concrete, sourced adapters and capabilities, self-managed host identity, safe merge checks, model resolution, explicit Paseo workspaces, and extension guide.
-- [ ] Run structural tests and evaluate behavioral scenarios; commit.
+- [x] Add failing resource-integrity/packaging tests and six-combination scenario fixtures.
+- [x] Implement concrete, sourced adapters and capabilities, self-managed host identity, safe merge checks, model resolution, explicit Paseo workspaces, and extension guide.
+- [x] Run structural tests and evaluate behavioral scenarios; commit.
 
 ### Task 3: Route workflows and migrate state
 
@@ -52,10 +52,10 @@
 
 **Interfaces:** workflows resolve setup once per task then invoke contract operations. State v2 persists full project/harness identity, central state path, launch authorization, model intent/resolution, worker/review identity and observation mode; legacy state has documented migration. Shared skills carry no executable platform commands.
 
-- [ ] Add failing checks for forbidden embedded commands and missing setup entry points; preserve visual-only/local work and dependency setup behavior.
-- [ ] Route issue and review operations through Git host adapters; external session lifecycle through harness adapters. Implement restart-safe scheduling and state migration instructions.
-- [ ] Document setup, all supported combinations, downgrade behavior, migration and live-test limits; run full tests/typecheck/validate.
-- [ ] Evaluate realistic scenarios with a fresh agent and perform independent whole-branch review; fix substantive issues and commit.
+- [x] Add failing checks for forbidden embedded commands and missing setup entry points; preserve visual-only/local work and dependency setup behavior.
+- [x] Route issue and review operations through Git host adapters; external session lifecycle through harness adapters. Implement restart-safe scheduling and state migration instructions.
+- [x] Document setup, all supported combinations, downgrade behavior, migration and live-test limits; run full tests/typecheck/validate.
+- [x] Evaluate realistic scenarios with a fresh agent and perform independent whole-branch review; fix substantive issues and commit.
 
 ## Execution record
 

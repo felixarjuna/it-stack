@@ -26,6 +26,7 @@ test('explicit/project selections win; auto detects; conflicting user defaults a
   assert.equal(conflict.settings['git-host'], 'gitlab');
   assert.deepEqual(conflict.conflicts, ['git-host']);
   assert.deepEqual(resolveSettings({}).settings, { 'git-host': 'auto', harness: 'auto' });
+  assert.deepEqual(resolveSettings({ detected: { 'git-host': 'gitlab', harness: 'paseo' }, defaults: { 'git-host': 'auto', harness: 'auto' } }).conflicts, []);
 });
 
 test('reading settings preserves complete/deferred setup and rejects invalid stored values', (t) => {

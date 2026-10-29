@@ -62,7 +62,7 @@ export function resolveSettings(layers: {
     Object.assign(settings, { [key]: value });
     const detected = layers.detected?.[key];
     const preferred = preference && preference !== 'auto' ? preference : (!preference ? layers.defaults?.[key] : undefined);
-    if (detected && detected !== 'auto' && preferred && preferred !== detected) conflicts.push(key);
+    if (detected && detected !== 'auto' && preferred && preferred !== 'auto' && preferred !== detected) conflicts.push(key);
   }
   return { settings, conflicts };
 }
