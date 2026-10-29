@@ -37,7 +37,7 @@ A fresh read-only skill simulation traced all six combinations plus first-use se
 
 Independent whole-branch review reproduced two setup bugs: project-local installs targeted the installer's working repository, and Auto defaults created false conflicts. Both have regression tests observed failing before fixes and passing afterward. Interactive setup was also exercised in a temporary Git repository: it suggested GitLab/Paseo and saved the confirmed project facts.
 
-The system Node build lacked TypeScript support, so validation used an isolated Node 24 runtime. Child-process output was unavailable under this environment's sandbox; installer tests ran with escalation using only temporary fixtures. These environment details do not change the package's declared Node requirements.
+The system Node build lacked TypeScript support, so validation used isolated Node runtimes. Full verification passed on Linux with Node 22.18.0, Node 24, and Node 26: 31 tests, type checking, package validation, and git diff whitespace checks. Windows/macOS CI remains to be run after the branch is pushed. Child-process output was unavailable under this environment's sandbox; installer tests ran with escalation using only temporary fixtures. These environment details do not change the package's declared Node requirements.
 
 ## Live integration limits
 
