@@ -5,6 +5,8 @@ description: Use before developing a web app or changing its visible interface w
 
 # stack-it
 
+First follow [platform setup](../ship-it/platforms/README.md), once per task. Local work can continue with setup deferred; resolve required identity before remote operations.
+
 Direct stack-it calls are exempt from the generic optional dependency installation flow: discover available skills and use the fallback below, without installation prompts. Calls from another workflow reuse its dependency result. The visual skills are not added to that workflow's installation offer.
 
 Establish the implementation contract before feature code. Read the project's [facts](../ship-it/project-facts.md), brief, existing design decisions and relevant code first. This runs inline and creates no sessions.

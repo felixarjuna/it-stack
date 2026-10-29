@@ -9,9 +9,14 @@
     {
       "name": "it-stack",
       "source": "./",
-      "description": "Plan, build, prove and ship work as self-explaining PRs, and run an issue backlog from one control room.",
+      "description": "Shared workflows for GitHub or GitLab with T3 Code, Paseo, or inline execution.",
       "category": "productivity",
-      "keywords": ["skills", "workflow", "pull-requests", "backlog"]
+      "keywords": [
+        "skills",
+        "workflow",
+        "pull-requests",
+        "backlog"
+      ]
     }
   ]
 }

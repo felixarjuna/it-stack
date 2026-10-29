@@ -1,130 +1,74 @@
 ---
 name: run-it
-description: Use when the owner wants a backlog worked, says "run the issues" or "do all of them", or resumes an existing backlog run. Supports inline work and explicitly selected separate T3 sessions.
+description: Use when the owner wants a backlog worked, says "run the issues" or "do all of them", or resumes an existing backlog run. Supports inline work and explicitly selected separate sessions.
 ---
 
 # run-it
 
-First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
+First follow [platform setup](../ship-it/platforms/README.md), once per task, then [optional dependency setup](../ship-it/dependency-setup.md). Read the project's [facts](../ship-it/project-facts.md), selected adapters and [run-state format](run-file.md).
 
-This thread becomes the **control room**: the one place the owner talks to while the backlog moves forward. The owner answers questions once, reviews PRs on the PR page, and says "merge" here (or merges on GitHub). Everything else keeps moving by itself.
-
-Read the project's `## it-stack` section first ([format and defaults](../ship-it/project-facts.md)).
-
-## Choose execution mode
-
-Use the owner's explicit choice, then the project's `execution` fact, then **inline**. Inline is the default for sequential or tightly coupled issues. Separate sessions are useful for independent work when the owner selects them. An explicit request to run this skill in separate-session mode authorizes one T3 session per eligible issue; a generic backlog request alone selects inline.
-
-Record `Execution mode: inline` or `Execution mode: sessions` in `.it-stack/run.md`. Reuse it on resume. An older file with Running thread IDs and no mode is a legacy `sessions` run: preserve those workers, record that inferred mode with `Session launches: pending owner choice`, and do not launch additional sessions until the owner has selected sessions for the resumed run. Persist that pending value across every resume; only an explicit choice changes it to `Session launches: authorized`. For new sessions runs, record authorized only from the owner choice or their project execution preference; inline runs use `Session launches: disabled`. Other legacy files default to inline. A new explicit choice overrides the recorded mode.
-
-When switching to inline with workers already running, record inline immediately, let those workers finish and retain their rows. Do not start replacement work or new sessions for their issues. Dependent inline work starts only after their PRs merge. Changing mode never cancels workers or authorizes merging.
-
-**Inline:** read [Inline execution](inline.md). T3 is optional; use the current session with `superpowers:executing-plans` when available. **Sessions:** T3 launch/list/read/send tools are required. If unavailable, report that limitation and offer inline; do not silently change an explicit sessions choice.
-
-Model selection below applies only when launching sessions or review agents, not to ordinary inline work.
+This thread is the control room. Shared rules schedule issues; Git host operations manage issues/reviews and Harness operations manage external sessions. Say PR for GitHub and MR for GitLab. Never require a particular pairing.
 
 ## Start or resume
 
-1. With T3, find this thread's id: `t3_thread_list` → `currentThreadId`. Without T3, use `Control room: local` and a `Run owner` session identifier; see [Inline execution](inline.md).
-2. `.it-stack/run.md` exists ([format](run-file.md))? **Resume:**
-   - If the control room it names is another thread that isn't settled (`t3_thread_list`), ask the owner in one line whether to take over; two control rooms must never act at once.
-   - Take over: write this thread's id into the file, and tell every external Running session with `t3_thread_send` (`mode: "queue"`): "Control room thread is now <this id>. Send PR and question messages here, and link your PR to it."
-   - For every Running row with a PR, `gh pr view <pr> --json state`: merged or closed → handle it as in **On wake-up**; open → link and watch when T3 tools are available; otherwise recheck on the next owner message.
-   - For every external Running row without a PR, read its thread (`t3_thread_read`) for a PR or question you missed. For `inline` rows, inspect their recorded workspace, branch, plan and Git/PR state; do not message or launch a worker.
-   - Never launch a second session for an issue that has a thread or a PR.
+1. Identify the repository and control room. Use harness `identify` for external-session runs, or a retained local owner ID for inline. An unavailable identity is not an inactive previous owner.
+2. Read the existing central run file first. Reconcile recorded reviews with `reviews.read/checks`, and workers with their recorded harness `list/read`. A row without a review may still own a branch, plan or launch reservation. Never start a second worker for it. Follow legacy migration before editing old state.
+3. If a different or unknown control room owns the run, ask for takeover before scheduling. On authorized takeover, update the owner and tell existing external workers via their original harness; preserve their IDs, branches, models and workspaces.
+4. Resolve execution: explicit owner choice, recorded run mode, project `execution`, otherwise inline. Sessions require explicit task or project authorization and available required harness operations. A generic backlog request defaults to inline. Report missing required capabilities and offer inline; do not silently downgrade an explicit sessions choice.
+5. Switching to inline changes future work only. Existing external workers finish in place; dependent inline work waits for their reviews to merge. Never cancel/relaunch them because of a mode change. Changing Git host or harness with active work requires a separate migration decision; retain original identities meanwhile.
+6. New run: ensure `.it-stack/` is ignored, use `sort-it`, and write Queue plus Questions. Record baseline observation as activity; use optional watches only when the selected pair supports them. State when idle external merges require another message/resume to be noticed.
 
-   Then go to **On wake-up**.
-3. No file: make sure `.it-stack/` is in `.gitignore`, then **Sort**.
+## Show the plan and settle questions
 
-## Sort
+Show sort-it's plan, then ask its first open question. Keep remaining questions in the state file. On an answer, update the issue's Decisions through `issues.update`; close a done issue with evidence only when the owner agreed. A resolved issue becomes ready immediately; call **Fill slots** while other questions remain. Too-big issues go through split-it and contribute their returned rows. Skipped questions remain unresolved and cannot start that issue.
 
-Use `sort-it`. Write its table into the Queue of a new `.it-stack/run.md`.
+When no questions remain, proceed without another approval gate.
 
-## Show the plan, then ask one at a time
+## Fill slots
 
-Send the owner `sort-it`'s **plan**, then the **first question** only. End your turn and wait. Keep the remaining questions in a `## Questions` list in the run file (open / answered), so a resumed control room knows where it was.
+Reconcile before scheduling. Fetch all open reviews, including other authors, and changed paths through `reviews.list`. Count each open review once plus each Running row with no open review (including launching/uncertain reservations). Incomplete listing or unknown migration coverage is a blocker, not free capacity.
 
-On each answer:
+Default limit: three occupied slots, only one migration. Only an explicit owner limit change overrides this; record it. A candidate must be ready, have merged dependencies, and not overlap any Running row's code areas or active migration. Pick the oldest eligible issue. Existing work holds its slot until disposition is known.
 
-1. Write it into its issue's `## Decisions` (as `plan-it` does), or, for a "close as done?" question, close the issue with a comment pointing at the evidence.
-2. A question the answer raised goes into the list, right after the current one if it blocks the same issue.
-3. When an issue has no open questions left, move it to `ready` (or run `split-it` if it's `too big`: its slices join the Queue with the rows it returns, and the parent leaves the Queue with Done `#<parent> split into #a, #b`), and **Fill the slots** right away, so work starts while you keep asking.
-4. Ask the next question, with a one-line note of what just changed ("#48 started").
+**Inline:** follow [inline execution](inline.md), with at most one active implementer in this session.
 
-No questions at all? Send the plan and go straight to **Fill the slots**. "Skip" or "later" on a question: move it to the end and ask the next; an issue with a skipped question doesn't start.
+**Sessions:** require `Session launches: authorized`. Resolve provider/model/options through harness `capabilities`, honoring explicit choice, then project preference, then discoverable current settings. On resume preserve the recorded selection and revalidate availability; do not substitute another model. Selection authorizes neither extra sessions nor reviewers.
 
-## Fill the slots
+Before calling harness `launch`, persist a unique reservation (run ID, full issue URL, branch, state `launching`). Provide:
 
-In **inline** mode use [Inline execution](inline.md) and start at most one implementer in this session. In **sessions** mode follow the launch procedure below only when `Session launches: authorized`; a pending or disabled value blocks new launches. Both modes obey the same slot, dependency, area-overlap and migration limits.
+- build-it task and issue URL;
+- Git host identity and project facts;
+- chosen harness/daemon and confirmed provider/model/options;
+- distinct branch/worktree strategy;
+- control-room ID and absolute central run-state path;
+- instructions to report questions, review URL and failures outside the issue through harness `send`, without editing central state.
 
-Repeat while a slot is free and the Queue has a launchable issue:
+Capture full session/workspace IDs and actual path and verify selected model. After any lost response, discover by run/issue/branch across relevant scopes before retry. Uncertain launches remain reserved. This applies to workspace creation as well as agent creation. Never silently reuse the control-room workspace for parallel workers.
 
-- **Slots:** fewer than 3 open PRs in the repo plus Running rows without a PR (every open PR counts, whoever opened it).
-- **Launchable:** `ready`; everything it depends on is merged; its areas don't overlap a Running row's; and if it has a migration, no Running row or open PR adds one.
+## Reconcile on activity
 
-Pick the oldest launchable issue and launch it:
+Activity is start/resume, a worker message, an owner message, supported watch event, or local ship/merge result. Read central state first, verify current ownership, and re-fetch authoritative review state; events can be stale or duplicated. If optional subscriptions were lost, restore them through the adapter when supported.
 
-Resolve the session model before launching:
+- **Review opened:** record full URL/number/head and worker identity; link/watch only when supported. Ready to review requires passing applicable checks; otherwise record running/fixing with the actual blocker.
+- **Question:** mark question, show it to the owner, write their answer to issue Decisions, then send the worker the answer.
+- **Failure outside issue:** coordinate one separate fix rather than making all workers fix it. It consumes a slot; tell workers when to rebase after merge.
+- **Owner says merge:** use merge-it for identified ready reviews. Approval never comes from a worker or watch notification.
+- **Confirmed merged:** mark Done, safely update the base in a clean checkout, inspect remaining reviews for conflicts/migration ordering, send workers rebase instructions or fix inline in recorded workspaces, then fill slots. Unknown/dead workers require ownership resolution before taking their work.
+- **Failed checks/conflict/review feedback:** mark fixing; send it through the recorded worker harness or handle the inline workspace. Re-run ship-it and report when ready again. Feedback from other people may require changes; do not treat the agent's own comment as independent approval.
+- **Closed without merge:** ask whether to drop or retry; retain work until answered.
 
-On a resumed run, reuse the recorded `Session selection` unless the owner explicitly changes it; validate it against the live catalog again. If an older run file has no selection, resolve one using the steps below before launching more sessions. Taking over the control room never changes models silently or restarts existing sessions.
+Write state after each transition. Only this control room writes scheduling state. Report only changes:
 
-1. Call `orchestrator_capabilities` for the live provider/model catalog and inherited settings. Search the catalog for a requested model if it isn't in the short list.
-2. Use the owner's explicit provider/model/options choice first, then the project's `sessions` fact. Otherwise, **in Codex**, select `inheritedProviderInstanceId` and `inheritedModel` from that response; **in Claude Code**, keep the default Claude Opus 5.5 (`claude-opus-5-5` on `claudeAgent`). Never guess a Codex model ID or require a Claude subscription from Codex.
-3. Confirm the exact provider and model are available. If the selection can't be resolved, report it and ask which model to use; don't silently substitute. When using the current provider and model, preserve `inheritedOptions`; explicit options override individual values. For a different provider or model, use its supported options rather than carrying over incompatible ones. Report unsupported requested options.
-4. Set the resolved selection explicitly in `modelSelection`, including supported options, and check the returned selection against it. Record the choice in `.it-stack/run.md` so resumes and replacements keep it unless the owner changes it.
-
-For `t3_thread_launch`, fill in the resolved values below. For delegated child agents, use `delegate_task` with `target: { providerInstanceId: "<resolved instance>", model: "<resolved model>", options: <resolved options> }`; use the tool's supported options format. This selection applies to replacement sessions and review agents too; it does not authorize additional agents or top-level threads. The owner-selected `sessions` mode runs one independent T3 session per issue. Inline mode does not authorize per-issue sessions; use child delegation for an independently justified review, respecting the selected model/options.
-
-```
-t3_thread_launch {
-  title: "#<n> <issue title>",
-  modelSelection: { instanceId: "<resolved instance>", model: "<resolved model>", options: <resolved options> },
-  workspaceStrategy: { type: "worktree", baseRef: "<default branch>", branch: "<type>/<n>-<slug>", startFromOrigin: true },
-  message: "Use the build-it skill for #<n>. Control room thread: <this thread id>. Link your PR to the control room and tell it with t3_thread_send when the PR is open, when you have a question, or when the check fails for a reason outside your issue (don't fix that yourself)."
-}
-```
-
-Retain the returned thread id and follow preparation with `t3_thread_read` / `t3_thread_wait`. A launch has no retry key: after an error or lost response, inspect `t3_thread_list` before retrying so it doesn't create a duplicate session. Add a Running row with its thread id, state `running`. Then report.
-
-## Report
-
-Only when something changed, and only this:
-
-```markdown
-| # | Session | PR | State |
+| Issue | Session | Review | State |
 | --- | --- | --- | --- |
-| 12 | [#12 Order notes](t3-thread://v1/<threadId>) | #40 | ready to review |
-| 15 | [#15 Total rounding](t3-thread://v1/<threadId>) | – | running |
-```
+| full issue URL | session link or full ID / inline | PR/MR URL | ready to review |
 
-Plus one line for anything that needs the owner: "Waiting on you: review #40" or "Question on #19: …".
-
-## On wake-up
-
-A wake-up is a PR event from a watch, a message from a session, or the owner talking. Read `.it-stack/run.md` first and route `inline` rows through [Inline execution](inline.md). With T3, check this thread is still active: if `t3_thread_list` shows it `settled` (a merge can settle a thread), `t3_thread_organize` `unsettle` it and `watch_pull_request` every open PR in Running again. Then handle what woke you:
-
-- **"PR opened for #n: <url>"** from a session: `link_pull_request` and `watch_pull_request` it here; Running row gets the PR, state `ready to review` once checks are green.
-- **"Check fails outside #n: …"** from a session: if several sessions report the same failure, fix it once yourself on its own branch and `ship-it` it as a separate PR (it takes a slot); then tell the sessions to rebase once it merges.
-- **"Question on #n: …"** from a session: state `question`; forward it to the owner in one line. When they answer, add it to the issue's `## Decisions` and tell the session with `t3_thread_send` to continue.
-- **Owner says "merge":** use `merge-it` for the PRs that are `ready to review`.
-- **PR merged** (by merge-it or on GitHub): move the row to Done, update the default branch only in a clean checkout (preserve uncommitted work), then check every other open PR from this run: one that now conflicts, or whose migration is now out of order, needs a rebase (and, for migrations, regenerating per the `migrations` fact). Ask its session to do it with `t3_thread_send`; if the session is gone, do it yourself in its worktree. Then **Fill the slots**.
-- **Check failed or conflict on a PR:** state `fixing`; send its session the failure with `t3_thread_send` and ask it to fix and re-run `ship-it`.
-- **Review comment or "changes requested"** on a PR (from anyone but this agent): state `fixing`; forward the comment to its session with `t3_thread_send`; it addresses it and re-runs `ship-it`. When it's green again, tell the owner it's ready for another look.
-- **PR closed without merging:** ask the owner in one line whether to drop the issue or relaunch it.
-
-Write the file, then **Report**.
+Add one line for an owner decision or blocker. The review carries the detailed briefing.
 
 ## Done
 
-Queue empty and nothing Running: `unwatch_pull_request` anything still watched, remove any session worktrees left behind (as `merge-it` does), tell the owner the run is finished with the Done list, and delete `.it-stack/run.md`.
-
-## Rules
-
-- Never merge without the owner saying so.
-- Never work, describe or launch `security-skip` issues.
-- Never launch two sessions for one issue. Keep to the limits even when the owner asks for "all of them": queue the rest and say so. Only an explicit "raise the limit to N" changes it; record it in the run file's `Limit:` line.
-- Keep chat short: the table and what needs the owner. The PRs carry the details.
+Queue empty and no Running rows: remove supported subscriptions and safely release clean, finished workspaces. Retain anything with unknown ownership or dirty work and report why. Summarize Done before removing the active run file; retain unresolved cleanup information separately if needed. Never describe security-skipped issue contents, bypass merge authorization, or duplicate a launch to fill a slot faster.
 
 ## If it isn't installed
 
-Without superpowers, use the inline fallback in [Inline execution](inline.md): a written issue plan, test-first changes, verification and ship-it. No external agent or plugin installation is needed just to run inline.
+Without superpowers, inline work uses a written issue plan, test-first changes, verification and ship-it. No external agent or plugin installation is needed for inline work. Without an optional watch bridge, all combinations still reconcile on activity; do not invent a background service.

@@ -1,64 +1,53 @@
-# `.it-stack/run.md`
+# Central `.it-stack/run.md` (version 2)
 
-The control room's memory. Written by `run-it` after every change, read first on every wake-up. It lives in the project (add `.it-stack/` to `.gitignore`) so a new control room can take over if the old thread is lost.
+One control room owns scheduling state. Resolve its absolute path in the control-room checkout and pass that path to every worker; ignored files are not shared across worktrees. Workers send messages and do not edit the file. An unreachable central path is not permission to start another run. Put `.it-stack/` in `.gitignore`.
 
-## Format
+## Header
 
 ```markdown
 # it-stack run
-
-Control room: 3f2c9a10-0000-4000-8000-000000000000
-Repo: someone/bakery-orders (default branch: main)
-Limit: 3 open PRs, 1 migration
-Started: 2026-11-02
-Execution mode: sessions
-Session launches: authorized
-Session selection: <resolved modelSelection as JSON, including options>
-
-## Running
-
-| # | Thread | Workspace | Plan | Branch | PR | Areas | Migration | State |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 12 | 7d1e…c4 | /worktrees/order-notes | docs/plans/order-notes.md | feat/12-order-notes | #40 | app/orders, api/orders | yes | ready to review |
-| 15 | 91ab…02 | /worktrees/total-rounding | docs/plans/total-rounding.md | fix/15-total-rounding | – | lib/money | no | running |
-
-## Queue
-
-| # | State | Areas | Migration | Depends on |
-| --- | --- | --- | --- | --- |
-| 18 | ready | app/menu | no | – |
-| 21 | ready | app/orders | yes | 12 |
-| 19 | needs answers | app/accounts | yes | – |
-
-## Questions
-
-- [x] #19: Can a customer change an order after the kitchen has seen it? → no (owner, 2026-11-02)
-- [ ] #21: Should order notes be visible to the delivery driver?
-
-## Done
-
-- #9 → #37 merged 2026-11-02
-- #11 closed: already done (owner agreed 2026-11-02)
-- #14 split into #22, #23, #24
-- 1 security issue skipped
+Version: 2
+Run ID: <unique id retained across resumes>
+State path: <absolute central path>
+Git host: github | gitlab
+Hostname: <host>
+Project: <full namespace/project>
+Project ID: <API identity>
+Remote: <selected remote name>
+Default branch: <branch>
+Harness: t3 | paseo | none
+Harness host: <daemon identity, no credentials>
+Control room: <full session ID or local>
+Run owner: <retained ownership ID>
+Execution mode: inline | sessions
+Session launches: authorized | pending owner choice | disabled
+Model intent: <provider, model, options JSON, or not used>
+Session selection: <harness-specific resolved JSON, or not used>
+Observation: activity | supported-watch
+Limit: 3 open reviews, 1 migration
+Started: <date>
 ```
 
-## States
+Record only actual resolved values, not alternatives from this template. Credentials never belong here. Each worker retains its own harness/host/model selection even when future execution changes.
 
-**Running:** `running` (session working, no PR yet), `question` (session asked; waiting for the owner), `ready to review` (PR open, checks green), `fixing` (checks failed or conflicts; session or control room is on it).
+## Tables
 
-**Queue:** the states from `sort-it`: `ready`, `needs answers`, `too big`.
+Running rows contain full issue URL, reservation ID, harness/host, full session ID (or inline/launching), full workspace ID (if managed), absolute path, plan path, branch, full review URL/number/head, code areas, migration flag and state. Human display may shorten IDs, persisted state may not. States: `launching`, `running`, `question`, `ready to review`, `fixing`; retain an explanation for unknown/uncertain state.
 
-Thread IDs in the file are full IDs; they're shortened above only to fit.
+Queue rows contain full issue URL, state (`ready`, `needs answers`, `too big`), code areas, migration flag and full dependency identities. Questions retain answered/skipped/open state and decisions. Done rows retain issue/review URLs, disposition and date; security issues are counted only.
 
-`Session selection` stores the provider instance, model and options resolved by run-it, using the returned T3 `modelSelection` shape. Replace the placeholder with the actual JSON. Reuse it on resume and for replacement sessions; if it becomes unavailable, ask the owner rather than switching models.
+## Reservation and ownership
 
-## Execution ownership
+Persist `launching` with a unique run/issue/branch reservation before any creation. After each result record workspace and session IDs. On lost responses enumerate the recorded harness, including archived/background scopes, and match the reservation, branch and messages before retrying. A missing ID is not proof of no worker. Keep uncertain reservations occupied and report the blocker. Confirm reviews with the Git host before marking Done; duplicate events are harmless reconciliation, not another transition.
 
-`Execution mode` is `inline` or `sessions`. It persists across resumes; an explicit owner change updates it. For older files with external Running threads but no mode, record `sessions` with `Session launches: pending owner choice`, preserve workers, and confirm sessions before launching additional ones. Keep the pending flag across resumes; only explicit owner choice changes it to `authorized`. New sessions runs record `authorized` from the owner choice or their project execution preference. Inline runs record `disabled`. Other legacy files default to inline.
+A different or unverifiable control room requires explicit owner takeover. After takeover notify all workers with the new control-room identity. No simultaneous controllers may schedule. Unknown previous worker lifecycle blocks conflicting/duplicate work. This is a single-writer protocol, not a claim of a filesystem lock.
 
-Inline Running rows use literal `inline` in Thread and retain their absolute Workspace and Plan path. An external worker keeps its thread ID even after the run changes to inline; do not replace that row until its work finishes. Current mode governs new work, not ownership of existing work.
+## Legacy migration
 
-Without T3, record `Control room: local` and a `Run owner` identifier. Unknown ownership requires takeover confirmation. See [Inline execution](inline.md).
+Before writing, save an exact backup next to the old run file. Infer GitHub/T3 only when old PR URLs/Repo identity and thread identifiers plus environment establish them; ambiguous host or ownership requires clarification. Preserve unknown fields and all Queue, Running, Questions and Done information. Resolve full URLs and actual paths; never invent missing IDs.
 
-`Session selection` is required before a session or reviewer is launched. Inline work can record `not used` when there are no external workers or review agents. Keep an existing selection while external work remains; it is not a request to change the current inline model.
+Map old `Thread` to Session (literal inline stays inline), old PR references to full review identity, and `Session selection` to the original T3 resolved object plus equivalent model intent. Do not change active selections or restart workers. Record model intent as unresolved until confirmable rather than guessing.
+
+Older files with external threads and no execution mode become sessions with `Session launches: pending owner choice`. Preserve that pending state across resumes until explicitly authorized. Existing authorized/disabled states remain unchanged; older files without external workers default to inline/disabled. An explicit current choice can update future execution, not ownership of existing rows.
+
+Changing Git host or harness while work remains active is not a config-only edit. Finish the run or obtain an explicit migration decision; preserve original per-worker routing until resolved. Missing state, unreachable daemon or changed current defaults must not redirect existing work to another project or spawn replacements.

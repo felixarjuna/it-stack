@@ -5,6 +5,8 @@ description: Use when an issue or plan is too big for one PR or one session. Bre
 
 # split-it
 
+First follow [platform setup](../ship-it/platforms/README.md), once per task. Local work can continue with setup deferred; resolve required identity before remote operations.
+
 First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
 
 A PR the owner can judge in a minute needs work small enough to fit in one. split-it makes the pieces.
@@ -18,11 +20,11 @@ Find Matt Pocock's skills using [the current client's skill lookup](../ship-it/p
 - **Fits a few sessions:** `to-tickets`. Tracer-bullet vertical slices, each with its blocking edges.
 - **More than a few sessions can hold, or full of open decisions:** `wayfinder`. A map of decision tickets resolved one at a time; each resolved decision becomes buildable issues.
 
-Where they talk about "the configured tracker" or label vocabulary, use GitHub issues through `gh` and no labels.
+Where they talk about "the configured tracker" or label vocabulary, use the selected Git host's issue operations and no labels.
 
 ## 2. Make the issues
 
-For each slice: `gh issue create` with
+For each slice: Git host `issues.create` with
 
 ```markdown
 Part of #<parent>.

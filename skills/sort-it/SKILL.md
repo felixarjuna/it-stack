@@ -5,6 +5,8 @@ description: Use to go through a repo's open issues - check each against the cod
 
 # sort-it
 
+First follow [platform setup](../ship-it/platforms/README.md), once per task. Local work can continue with setup deferred; resolve required identity before remote operations.
+
 First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
 
 The owner should see the plan first, then answer only questions the code can't answer, one at a time.
@@ -17,7 +19,7 @@ Find Matt Pocock's `triage` skill using [the current client's skill lookup](../s
 
 ## 2. Sort every open issue
 
-`gh issue list --state open --limit 100 --json number,title,labels,body,comments`. For each:
+Use Git host `issues.list` through every page; use `issues.read` for body, labels and comments. An unavailable project or failed listing is not an empty backlog. For each:
 
 | State | When |
 | --- | --- |

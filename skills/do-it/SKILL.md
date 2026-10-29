@@ -5,6 +5,8 @@ description: Use for any request when you're not sure which it-stack skill fits,
 
 # do-it
 
+First follow [platform setup](../ship-it/platforms/README.md), once per task. Local work can continue with setup deferred; resolve required identity before remote operations.
+
 First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
 
 The owner shouldn't have to remember skill names. Read the request, pick one skill, say "Using <skill>." and follow it.
@@ -13,6 +15,7 @@ For Codex and Claude Code invocation and optional skill lookup, follow [Using sk
 
 | The request is… | Use |
 | --- | --- |
+| configure or change Git host, Harness, or first-use settings | `setup-it` |
 | something broken, wrong, failing or a bug report | `fix-it` |
 | configure the tech stack, component libraries or design system before development | `stack-it` |
 | an issue number, or a feature clear enough to build | `build-it` |
@@ -21,7 +24,7 @@ For Codex and Claude Code invocation and optional skill lookup, follow [Using sk
 | "sort the issues", "what's open", "triage" | `sort-it` |
 | too big for one PR, "split this", "break it down" | `split-it` |
 | "merge", "merge them", "ship it in" | `merge-it` |
-| "open a PR", "ship this", a finished change in the working tree | `ship-it` |
+| "open a PR", "open an MR", "ship this", a finished change in the working tree | `ship-it` |
 | "show me it works", "screenshot it" | `prove-it` |
 
 Two fit? Take the earlier row: a bug inside a feature request is still a bug. Nothing fits (a question, an explanation, a one-off command)? Just do it directly; not everything needs a skill.

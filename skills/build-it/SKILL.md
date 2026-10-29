@@ -5,6 +5,8 @@ description: Use to build one issue or clear feature from start to finish - read
 
 # build-it
 
+First follow [platform setup](../ship-it/platforms/README.md), once per task. Local work can continue with setup deferred; resolve required identity before remote operations.
+
 First follow [optional dependency setup](../ship-it/dependency-setup.md), including when invoked directly. Reuse the result within this task.
 
 One issue in, one PR out.
@@ -13,12 +15,12 @@ Read the project's `## it-stack` section first ([format and defaults](../ship-it
 
 ## 1. Read the brief
 
-`gh issue view <n> --comments`. The issue body and its `## Decisions` section are the spec.
+Use Git host `issues.read` for the selected project and issue, including comments. The issue body and its `## Decisions` section are the spec.
 
 Something unclear that changes what gets built?
 
 - **Talking to the owner:** use `plan-it` (chat mode), then continue.
-- **Launched by run-it** (your instructions say `Control room thread: <id>`): comment the question on the issue, send it to the control room with `t3_thread_send` (`threadId` = that id, `mode: "queue"`, message `Question on #<n>: <question>`), and stop. Don't guess.
+- **Launched by run-it** (your instructions name a separate control room): use `issues.comment`, then harness `send` to that control room with `Question on <issue-url>: <question>`, and stop. Don't guess.
 
 ## 2. Slot check
 
@@ -42,7 +44,7 @@ Use `ship-it`, with `Closes #<n>` in the body.
 
 Other skills link here. Before starting work that will become a PR:
 
-1. `gh pr list --state open --json number,title,files --limit 100`. If `.it-stack/run.md` exists, also read its Running rows: a run-it session without a PR yet still holds a slot.
+1. Use Git host `reviews.list`, following every page and inspecting changed paths. Failed or incomplete enumeration is unknown capacity, not zero open reviews. If `.it-stack/run.md` exists, also read its Running rows: a run-it session without a PR yet still holds a slot.
 2. **Open PRs:** open PRs plus Running rows without a PR, 3 or more, means the limit is reached. Every open PR counts, whoever opened it.
 3. **Migrations:** a PR adds a migration when one of its files is under the path in the `migrations` fact; a Running row says so in its Migration column. If one already adds a migration and this work will too, the limit is reached.
 
