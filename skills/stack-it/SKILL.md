@@ -26,6 +26,14 @@ Owner decisions and standing authorization carry forward. Settle ordinary implem
 3. Honor requested libraries. Verify supported versions and source registries using official documentation and the installed CLI. Check compatibility before copying examples; registry code may target a different major version. Record any adaptation, source and license. Do not silently substitute an unrelated similarly named project. Preserve customized components rather than blanket-overwriting them.
 4. Prefer the smallest compatible change to the established stack. Record runtime, framework, styling, primitives, icons, table/form strategy, deployment constraints and dependency policy. Verify current recommendations against official sources; record reasons, not just library names.
 
+## shadcn projects
+
+When the project has `components.json`, or the owner requests shadcn components or a preset, discover and read the installed **shadcn** skill before changing configuration, tokens or components. Follow its project inspection, CLI, component documentation, composition and preset-update workflow; use the project package runner. Keep the established primitive base and local component behavior when merging, and reconcile stale configuration before adding components.
+
+For a preset change, reuse the owner's selected update mode (overwrite, partial, merge or skip). Ask for that choice only when it is missing; do not repeat an answered approval question. Use the shadcn CLI to inspect preset codes and preview component changes, rather than decoding codes or copying registry source manually. Record the preset and any deliberate adaptations in the design contract.
+
+If the shadcn skill is unavailable, say so briefly and use the official shadcn CLI and documentation for these steps. Preserve the package manager, primitive base and customized components; inspect changes before applying them. Do not install a skill or plugin without authorization or block on an optional installation. Non-shadcn projects keep their existing component workflow.
+
 ## Write the contract
 
 Use `frontend-design` when available to choose a concrete direction tied to the primary task. Save a concise contract in a tracked project path (default `docs/design-system.md`) before implementation and include it in the change's commit. A separate preliminary commit is not required. Include:
