@@ -12,8 +12,12 @@ Use the current client's skill catalog and [local skill lookup](project-facts.md
 | --- | --- | --- | --- |
 | `superpowers` | `brainstorming`, `systematic-debugging`, `test-driven-development` | Planning, debugging, and test-first implementation | https://github.com/obra/superpowers |
 | `mattpocock-skills` | `grilling`, `triage`, `to-tickets`, `wayfinder` | Clarifying requirements, triaging issues, and splitting work | https://github.com/mattpocock/skills |
+| `caveman` | `caveman` | Optional concise-response style | https://github.com/JuliusBrussee/caveman |
+| `pstack` | `poteto-mode`, `setup-pstack` | Optional companion workflows for implementation, verification, and PR briefings | https://github.com/cursor/plugins/tree/main/pstack |
 
-Check both optional plugins together so setup asks once. If only some skills are present, report the missing skills and offer a repair only after identifying a supported route that preserves existing skills. An unavailable repair route uses the fallback. A disabled plugin needs an explicit enable choice; it is not a missing installation.
+Check all four optional dependencies together so setup asks once. If only some skills are present, report the missing skills and offer a repair only after identifying a supported route that preserves existing skills. An unavailable repair route uses the fallback. A disabled plugin needs an explicit enable choice; it is not a missing installation.
+
+Caveman and pstack are optional companions, not prerequisites for it-stack. If unavailable or declined, keep the user's normal response style and it-stack's existing verification/briefing workflow. Installing a companion does not replace it-stack's selected Git host, Harness, model, or merge authorization.
 
 Delegated workers, batch calls, and unattended runs never prompt or install: reuse the caller's result, or use fallbacks and report missing dependencies to the caller in the task result. Only the interactive parent offers setup. Pass this result to child work to avoid duplicate prompts or concurrent installations.
 
@@ -24,6 +28,10 @@ Prefer the current client's native plugin installer. Inspect its available tools
 For Codex without a native route, a supported skill installer may install the named skills and their supporting resources from the upstream repository. Present that as a standalone-skills installation, with the exact destination and folders; do not claim it installs a plugin. For Claude Code, use its native plugin route when available. Never require the other client to be installed. If no supported route is available, explain once and continue with fallbacks.
 
 Default scope is the current client's user account. Show the actual scope/destination in the offer. Include any marketplace addition, enabling, repair, or replacement the operation would require. Existing files must not be overwritten without separately disclosed approval.
+
+For **Caveman**, prefer the concise-response skill and required supporting resources, not the broad CLI installer. Inspect the current distribution before offering it: some routes install session hooks or activate the style automatically, and the broader CLI may configure additional agents, routing or telemetry. Disclose those actual effects and require a specific choice for that expanded scope. Do not add always-on rules or run a fleet-wide installer merely because the owner accepted the skill suggestion.
+
+For **pstack**, resolve the official distribution from `cursor/plugins`; its upstream README documents the `pstack@cursor-plugins` Claude Code package and generated harness tree. Verify the current client's supported route rather than assuming Cursor commands work everywhere. A standalone install must retain the selected skills' playbooks and linked resources. An unrelated `statechart` or `tdd` skill alone is not evidence that pstack is installed. Do not substitute a third-party port without identifying its separate source in a new offer. Installing pstack does not authorize running its configuration workflow or changing model/routing defaults.
 
 Read `~/.it-stack/dependency-preferences.json` (where `~` is the user's home directory, not the project). Missing file means no saved preferences. Its only authority is to suppress prompts, never to grant installation permission. For example:
 
@@ -50,6 +58,8 @@ If everything is available or suppressed, continue immediately. Otherwise show o
 > Superpowers is available. `mattpocock-skills` is missing; it adds guided requirements, issue triage, and task splitting. Install [exact plugin ID or skill folders] from [verified marketplace/repository and ref] for [scope/destination]?
 >
 > **Install listed dependencies** · **Continue with fallbacks** · **Don't ask again for these dependencies**
+
+If Superpowers and Matt Pocock's skills are present but Caveman and pstack are missing, the combined offer lists just Caveman and pstack with their verified routes and scope. A narrowed choice such as "Caveman only" installs only that item; suppression for Matt or another existing dependency does not suppress either new companion.
 
 Use the client's user-question interface if available, otherwise ask in chat. Accept a narrowed answer such as "install Matt only" or "don't ask again for Matt"; apply it only to those items and use fallbacks for the other items for this task, without another prompt. Wait for an explicit answer before any installation, marketplace addition, download for installation, enablement, or repair. A request to fix/build, a selected default, silence, or an unattended run is not consent. Explicit prior approval in this task for the same listed operations is sufficient; do not ask twice. The offer never grants blanket permission for new plugins, new sources, or expanded scope.
 

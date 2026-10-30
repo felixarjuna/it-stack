@@ -48,7 +48,9 @@ node scripts/install-codex.ts --dest "/path/to/project/.agents/skills"
 
 On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the twelve previously installed it-stack folders out of the destination, then run the installer again. Keep the twelve folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
 
-Except for direct stack-it calls (which discover visual skills and use fallbacks without an installation offer), skills start with an [optional dependency check](skills/ship-it/dependency-setup.md). It recognizes existing plugins and standalone skills, then offers to install missing Superpowers and Matt Pocock skills together. The offer shows their sources and installation scope and waits for your consent. This runs when an agent follows a skill, not when the plugin itself is installed.
+Except for direct stack-it calls (which discover visual skills and use fallbacks without an installation offer), workflow skills start with an [optional dependency check](skills/ship-it/dependency-setup.md). It recognizes existing plugins and standalone skills, then offers missing Superpowers, Matt Pocock skills, Caveman, and pstack together in one prompt. The offer shows verified sources, installation scope, and any activation effects, and waits for your consent. This runs when an agent follows a workflow skill, not when the plugin itself is installed; `setup-it` only configures platforms.
+
+Caveman is an optional concise-response style; pstack supplies companion implementation, verification, and review workflows. Both remain optional. Caveman's broad CLI installer and always-on behavior are separate choices, and installing pstack does not change your harness, model, or merge policy. Accept individual items, continue with fallbacks, or suppress suggestions per dependency.
 
 Choose **Install listed dependencies**, **Continue with fallbacks** for this task, or **Don't ask again for these dependencies**. The last choice is saved per client, plugin, source, and scope in `~/.it-stack/dependency-preferences.json`; new dependencies still get their own prompt. Ask to reconsider a dependency to revisit the choice. No installation approvals are stored. Declines, installation failures, unsupported clients, and installations requiring a restart use the existing fallbacks so your original task can continue. Delegated and unattended work never prompts or installs.
 
@@ -133,8 +135,9 @@ it-stack builds on other people's work instead of copying it:
 - [pstack](https://github.com/cursor/plugins/tree/main/pstack) by Lauren Tan (poteto): the PR briefing format and "prove it works in the real artifact".
 - [mattpocock/skills](https://github.com/mattpocock/skills) by Matt Pocock: `triage`, `to-tickets`, `wayfinder`, `grilling`.
 - [superpowers](https://github.com/obra/superpowers) by Jesse Vincent: `brainstorming`, `systematic-debugging`, `test-driven-development`.
+- [Caveman](https://github.com/JuliusBrussee/caveman) by Julius Brussee: optional concise-response style.
 
-The setup check offers mattpocock-skills and superpowers for the full experience; every skill that uses them has a fallback when they're unavailable.
+The optional dependency check offers Superpowers, Matt Pocock skills, Caveman, and pstack when missing. Existing workflows remain usable when any are unavailable or declined.
 
 ## License
 
