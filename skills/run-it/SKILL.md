@@ -32,7 +32,7 @@ Default limit: three occupied slots, only one migration. Only an explicit owner 
 
 **Inline:** follow [inline execution](inline.md), with at most one active implementer in this session.
 
-**Sessions:** require `Session launches: authorized`. Resolve provider/model/options through harness `capabilities`, honoring explicit choice, then project preference, then discoverable current settings. On resume preserve the recorded selection and revalidate availability; do not substitute another model. Selection authorizes neither extra sessions nor reviewers.
+**Sessions:** require `Session launches: authorized`. Resolve provider/model/options through harness `capabilities`, honoring explicit choice, then project preference, then the [model roles](../ship-it/platforms/contracts.md) (sessions on the newest Opus or Sol, never the control room's model by inheritance; the newest Fable or Astra only for the control room and important final decisions), then discoverable current settings. On resume preserve the recorded selection and revalidate availability; do not substitute another model. Selection authorizes neither extra sessions nor reviewers.
 
 Before calling harness `launch`, persist a unique reservation (run ID, full issue URL, branch, state `launching`). Provide:
 
