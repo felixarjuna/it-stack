@@ -42,13 +42,15 @@ Record model intent `{provider, model, options}` and adapter-specific resolved s
 
 | Role | Claude | GPT (Codex) |
 | --- | --- | --- |
-| Sessions, implementers, reviewers, helpers | Opus (`claude-opus-5-5`) | Sol (`gpt-6.1-sol`) |
-| Control room and final decider | Fable (`claude-fable-5-1`) | Astra (`gpt-6-astra`) |
+| Sessions, implementers, reviewers, helpers | Opus | Sol |
+| Control room and final decider | Fable | Astra |
+
+These are model **families**, not versions. At launch, resolve each to the newest model of that family in `capabilities` (e.g. Opus → `claude-opus-5-5` today) and record the exact ID in the run selection. A newer version is picked up automatically; a recorded run keeps its resolved ID on resume.
 
 - **Sessions** always launch on the worker model of their provider, whatever model the control room runs on.
 - **Control room:** the run-it thread should run on the control-room model. A skill cannot switch its own model: if it runs on another one, say so in one line and continue.
 - **Final decider:** spawn a one-off Fable/Astra agent only when a decision is important and hard to undo or genuinely disputed (two reviews disagree, a risky merge, a security or data-loss call, a non-additive migration). Routine checks, reviews and merges of green PRs stay on the worker model.
-- Use the provider of the control room unless the owner names another. Match IDs against `capabilities` at launch time; when a named model is missing, pick no substitute and ask.
+- Use the provider of the control room unless the owner names another. When no model of the named family is available, pick no substitute and ask.
 
 Before a launch, persist a `launching` reservation keyed by run/issue/branch. Supply this identity in task text and session title. After a lost response, discover by this identity before retrying; uncertain results keep the slot reserved. Do not guess a new ID. A child receives the resolved context and absolute central run-state path, but only the control room writes that state.
 
