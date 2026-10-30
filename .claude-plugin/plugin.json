@@ -1,6 +1,6 @@
 {
   "name": "it-stack",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Plan, build, verify and ship with independently configurable Git hosts and harnesses.",
   "author": {
     "name": "Felix Arjuna",

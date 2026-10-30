@@ -36,7 +36,19 @@ Use argument arrays or proper shell quoting, not interpolated issue bodies. Writ
 | `release` | stopped/released session + clean workspace → supported cleanup, or retained with reason |
 | `link/watch/unwatch` (optional) | review URL + session → supported subscription/link, or unavailable |
 
-Record model intent `{provider, model, options}` and adapter-specific resolved selection separately. Explicit task choice wins, then project session preferences, then actual current-session defaults when discoverable. Preserve the legacy Claude default only in environments where it is available and expected; never force it on another agent. Confirm the exact choice against installed capabilities before launch. No silent model substitutions.
+Record model intent `{provider, model, options}` and adapter-specific resolved selection separately. Explicit task choice wins, then project session preferences, then the **model roles** below, then actual current-session defaults when discoverable. Never inherit the control room's model for a worker just because the control room runs on it. Confirm the exact choice against installed capabilities before launch. No silent model substitutions.
+
+**Model roles (default).** Workers do the building; the strongest model is kept for coordination and final calls, and only used when it matters.
+
+| Role | Claude | GPT (Codex) |
+| --- | --- | --- |
+| Sessions, implementers, reviewers, helpers | Opus (`claude-opus-5-5`) | Sol (`gpt-6.1-sol`) |
+| Control room and final decider | Fable (`claude-fable-5-1`) | Astra (`gpt-6-astra`) |
+
+- **Sessions** always launch on the worker model of their provider, whatever model the control room runs on.
+- **Control room:** the run-it thread should run on the control-room model. A skill cannot switch its own model: if it runs on another one, say so in one line and continue.
+- **Final decider:** spawn a one-off Fable/Astra agent only when a decision is important and hard to undo or genuinely disputed (two reviews disagree, a risky merge, a security or data-loss call, a non-additive migration). Routine checks, reviews and merges of green PRs stay on the worker model.
+- Use the provider of the control room unless the owner names another. Match IDs against `capabilities` at launch time; when a named model is missing, pick no substitute and ask.
 
 Before a launch, persist a `launching` reservation keyed by run/issue/branch. Supply this identity in task text and session title. After a lost response, discover by this identity before retrying; uncertain results keep the slot reserved. Do not guess a new ID. A child receives the resolved context and absolute central run-state path, but only the control room writes that state.
 

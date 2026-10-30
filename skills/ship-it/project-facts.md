@@ -44,6 +44,6 @@ Project workflow facts plus independent Git host and Harness settings, one bulle
 - **private:** never put secrets, real user data or security details in a PR, issue or commit; the repo may be public.
 - **execution:** inline. Preserve a recorded run mode on resume; an explicit owner choice overrides it.
 - **design-system:** reuse an existing equivalent contract, otherwise `docs/design-system.md`. Follow stack-it for new or affected web interfaces; backend-only work does not need a visual contract.
-- **sessions:** resolve current provider/model/options through the selected harness adapter. Preserve explicit choices and recorded run selections; unavailable choices require a decision, never silent substitution. See [model contract](platforms/contracts.md).
+- **sessions:** resolve provider/model/options through the selected harness adapter using the [model roles](platforms/contracts.md): workers on Opus (`claude-opus-5-5`) or Sol (`gpt-6.1-sol`), control room and final decider on Fable (`claude-fable-5-1`) or Astra (`gpt-6-astra`). Preserve explicit choices and recorded run selections; unavailable choices require a decision, never silent substitution. See [model contract](platforms/contracts.md).
 
 When the whole section is missing, use setup-it for first-use platform choices and these workflow defaults for independent local work. Do not guess remote identity. Existing GitHub merge flag strings remain accepted by the GitHub adapter only.
