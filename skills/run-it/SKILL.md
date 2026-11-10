@@ -15,6 +15,8 @@ This thread is the control room. Shared rules schedule issues; Git host operatio
 2. Read the existing central run file first. Reconcile recorded reviews with `reviews.read/checks`, and workers with their recorded harness `list/read`. A row without a review may still own a branch, plan or launch reservation. Never start a second worker for it. Follow legacy migration before editing old state.
 3. If a different or unknown control room owns the run, ask for takeover before scheduling. On authorized takeover, update the owner and tell existing external workers via their original harness; preserve their IDs, branches, models and workspaces.
 4. Resolve execution: explicit owner choice, recorded run mode, project `execution`, otherwise inline. Sessions require explicit task or project authorization and available required harness operations. A generic backlog request defaults to inline. Report missing required capabilities and offer inline; do not silently downgrade an explicit sessions choice.
+
+   An owner who asks for an "agent room", to "spawn agents", for "separate sessions/chats/threads" or to work issues "in parallel" has chosen sessions; record `Session launches: authorized`. There are exactly two modes. A session is a separate top-level harness session the owner can open, with its own workspace and review. The client's in-session subagents, background agents and delegated child tasks are neither mode: never use them as implementers. The owner cannot follow their pipeline or review, and they end with the control room's process.
 5. Switching to inline changes future work only. Existing external workers finish in place; dependent inline work waits for their reviews to merge. Never cancel/relaunch them because of a mode change. Changing Git host or harness with active work requires a separate migration decision; retain original identities meanwhile.
 6. New run: ensure `.it-stack/` is ignored, use `sort-it`, and write Queue plus Questions. Record baseline observation as activity; use optional watches only when the selected pair supports them. State when idle external merges require another message/resume to be noticed.
 
@@ -41,7 +43,8 @@ Before calling harness `launch`, persist a unique reservation (run ID, full issu
 - chosen harness/daemon and confirmed provider/model/options;
 - distinct branch/worktree strategy;
 - control-room ID and absolute central run-state path;
-- instructions to report questions, review URL and failures outside the issue through harness `send`, without editing central state.
+- instructions to report questions, review URL and failures outside the issue through harness `send`, without editing central state;
+- instructions to commit and push after each passing step, and to wait for background commands and checks in the foreground: a worker that ends its turn while waiting reports done with the work unfinished.
 
 Capture full session/workspace IDs and actual path and verify selected model. After any lost response, discover by run/issue/branch across relevant scopes before retry. Uncertain launches remain reserved. This applies to workspace creation as well as agent creation. Never silently reuse the control-room workspace for parallel workers.
 
