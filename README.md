@@ -24,11 +24,11 @@ codex plugin add it-stack@it-stack
 
 Start a new Codex session after installation. You can also enter `/plugins` in Codex CLI to browse and install from the configured marketplace. These are Codex's [native plugin commands](https://learn.chatgpt.com/docs/cli/reference#codex-plugin); use a current CLI version if your installation doesn't recognize them.
 
-Codex supports the repo's existing Claude-compatible plugin and marketplace manifests, so both clients install the same twelve skills and supporting files. No manual clone, Node.js setup, or installer script is needed for this route. Start with `$do-it`, or select a skill from Codex's skill picker.
+Codex supports the repo's existing Claude-compatible plugin and marketplace manifests, so both clients install the same thirteen skills and supporting files. No manual clone, Node.js setup, or installer script is needed for this route. Start with `$do-it`, or select a skill from Codex's skill picker.
 
 ### Optional: standalone Codex skills
 
-Use this route for a project-local skills directory or a client that cannot install plugins. Choose either plugin installation or standalone skills to avoid duplicate entries. If you previously used this script, back up and move its twelve installed skill folders out of your skill directory before switching to the plugin.
+Use this route for a project-local skills directory or a client that cannot install plugins. Choose either plugin installation or standalone skills to avoid duplicate entries. If you previously used this script, back up and move its installed it-stack skill folders out of your skill directory before switching to the plugin.
 
 With Git and Node.js 22.18+ (22.x) or 24+ installed, run these commands in PowerShell, bash or zsh:
 
@@ -38,7 +38,7 @@ cd it-stack
 node scripts/install-codex.ts
 ```
 
-The installer copies all twelve skill folders and their supporting files to `~/.agents/skills`, Codex's [user skill location](https://developers.openai.com/codex/skills/). No Claude Code installation or subscription is needed. Start with `$do-it`, or type `$fix-it`, `$build-it`, or `$run-it`. If the skills don't appear, restart Codex.
+The installer copies all thirteen skill folders and their supporting files to `~/.agents/skills`, Codex's [user skill location](https://developers.openai.com/codex/skills/). No Claude Code installation or subscription is needed. Start with `$do-it`, or type `$fix-it`, `$build-it`, or `$run-it`. If the skills don't appear, restart Codex.
 
 For skills available only in one project, pass its skill directory instead:
 
@@ -46,9 +46,9 @@ For skills available only in one project, pass its skill directory instead:
 node scripts/install-codex.ts --dest "/path/to/project/.agents/skills"
 ```
 
-On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the twelve previously installed it-stack folders out of the destination, then run the installer again. Keep the twelve folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
+On Windows, use a path such as `"C:/projects/my-app/.agents/skills"`. The installer works from any working directory and refuses to overwrite any existing skill path, checking all names before copying. To update, pull this checkout, back up and move the previously installed it-stack folders out of the destination, then run the installer again. Keep the thirteen folders together: workflows use sibling skills and references. Unrelated installed skills are left in place.
 
-Except for direct stack-it calls (which discover visual skills and use fallbacks without an installation offer), workflow skills start with an [optional dependency check](skills/ship-it/dependency-setup.md). It recognizes existing plugins and standalone skills, then offers missing Superpowers, Matt Pocock skills, Caveman, and pstack together in one prompt. The offer shows verified sources, installation scope, and any activation effects, and waits for your consent. This runs when an agent follows a workflow skill, not when the plugin itself is installed; `setup-it` only configures platforms.
+Except for direct stack-it calls (which discover visual skills and use fallbacks without an installation offer), workflow skills start with an [optional dependency check](skills/ship-it/dependency-setup.md). It recognizes existing plugins and standalone skills, then offers missing Superpowers, Matt Pocock skills, Caveman, and pstack together in one prompt; on CI work it also offers the CI skill for your Git host. The offer shows verified sources, installation scope, and any activation effects, and waits for your consent. This runs when an agent follows a workflow skill, not when the plugin itself is installed; `setup-it` only configures platforms.
 
 Caveman is an optional concise-response style; pstack supplies companion implementation, verification, and review workflows. Both remain optional. Caveman's broad CLI installer and always-on behavior are separate choices, and installing pstack does not change your harness, model, or merge policy. Accept individual items, continue with fallbacks, or suppress suggestions per dependency.
 
@@ -63,6 +63,7 @@ Choose **Install listed dependencies**, **Continue with fallbacks** for this tas
 | ★ **`setup-it`** | Configure Git host and Harness independently; offered automatically on first use. |
 | ★ **`do-it`** | Start here. Reads any request and picks the right skill below. |
 | ★ **`stack-it`** | Establish or reconcile the tech stack, component sources and design system before web development; reuse decisions and verify rendered workflows. |
+| ★ **`ci-it`** | CI/CD on GitHub and GitLab: one naming convention, safe renames, lint before presenting, least-privilege and pinned pipelines. |
 | ★ **`fix-it`** | Bugs: reproduce, root cause, failing test first, fix, ship. |
 | ★ **`build-it`** | One issue start to finish: read the brief, build test-first, prove it, ship a PR/MR that closes it. |
 | ★ **`run-it`** | Turns the thread into a control room for the whole backlog: the plan first, then questions one at a time, inline by default or separate sessions through T3 Code or Paseo when selected, at most 3 open reviews, dependent issues start after merge. |
@@ -136,6 +137,8 @@ it-stack builds on other people's work instead of copying it:
 - [mattpocock/skills](https://github.com/mattpocock/skills) by Matt Pocock: `triage`, `to-tickets`, `wayfinder`, `grilling`.
 - [superpowers](https://github.com/obra/superpowers) by Jesse Vincent: `brainstorming`, `systematic-debugging`, `test-driven-development`.
 - [Caveman](https://github.com/JuliusBrussee/caveman) by Julius Brussee: optional concise-response style.
+- [gitlab-ci-skill](https://gitlab.com/gitlab-org/ci-cd/gitlab-ci-skill) by GitLab Inc.: the CI job naming convention and build → test → deploy shape `ci-it` uses; optional for GitLab CI work.
+- [authoring-github-workflows](https://github.com/dotnet/skills) by the .NET team at Microsoft: workflow YAML validity and pinned actionlint; optional for GitHub Actions work.
 
 The optional dependency check offers Superpowers, Matt Pocock skills, Caveman, and pstack when missing. Existing workflows remain usable when any are unavailable or declined.
 

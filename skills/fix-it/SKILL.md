@@ -19,7 +19,7 @@ Run the [slot check](../build-it/SKILL.md#slot-check). Over the limit: say so in
 
 ## 2. Find the cause
 
-Use `superpowers:systematic-debugging`. Reproduce the problem first, the way the user hit it. Read the code and the history (`git log -S`, `git blame`) before forming a theory. The fix goes where the cause is, even if the symptom shows up elsewhere.
+Use `superpowers:systematic-debugging`. Reproduce the problem first, the way the user hit it. Read the code and the history (`git log -S`, `git blame`) before forming a theory. The fix goes where the cause is, even if the symptom shows up elsewhere. When the cause is CI configuration, follow [ci-it](../ci-it/SKILL.md) for the fix: its naming, rename and lint rules apply.
 
 ## 3. Test first
 

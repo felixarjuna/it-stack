@@ -15,7 +15,7 @@ Read the project's `## it-stack` section first ([format and defaults](project-fa
 
 ## 1. Check
 
-Run the `check` command. Fix anything red, including failures you didn't cause, unless you are an external worker with a different control-room thread: then a failure outside your issue goes to the control room (harness `send`, message `Check fails outside <issue-url>: <failure>`) and you wait, so parallel sessions don't all fix the same thing. Never open a PR on a red check.
+Run the `check` command. If the diff touches CI configuration, also run [ci-it](../ci-it/SKILL.md)'s Verify step, and list any renamed required checks in Scope. Fix anything red, including failures you didn't cause, unless you are an external worker with a different control-room thread: then a failure outside your issue goes to the control room (harness `send`, message `Check fails outside <issue-url>: <failure>`) and you wait, so parallel sessions don't all fix the same thing. Never open a PR on a red check.
 
 ## 2. Prove it
 

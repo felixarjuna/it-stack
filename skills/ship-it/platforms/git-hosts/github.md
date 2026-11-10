@@ -7,6 +7,7 @@ Implements the [Git host contract](../contracts.md) using `gh`. Independent of h
 | Operation | Mapping |
 | --- | --- |
 | `project` | `gh repo view R --json nameWithOwner,url,defaultBranchRef`; use `gh api --hostname H repos/OWNER/REPO` for merge-method support |
+| `project.requiredChecks` | `gh api --hostname H repos/OWNER/REPO/rules/branches/BRANCH` (rulesets; read access suffices), keep rules of type `required_status_checks` and their `context`s; plus `gh api --hostname H repos/OWNER/REPO/branches/BRANCH/protection/required_status_checks` for classic protection. 404 there means no classic rule; 403 means unknown (admin needed), not none |
 | `issues.list` | `gh api --hostname H --paginate 'repos/OWNER/REPO/issues?state=open&per_page=100'`; exclude objects with `pull_request` |
 | `issues.read` | `gh issue view N --repo R --json number,title,body,labels,url`; paginate `repos/OWNER/REPO/issues/N/comments` |
 | `issues.create` | `gh issue create --repo R --title TITLE --body-file BODY` |

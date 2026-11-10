@@ -17,6 +17,7 @@ For Codex and Claude Code invocation and optional skill lookup, follow [Using sk
 | --- | --- |
 | configure or change Git host, Harness, or first-use settings | `setup-it` |
 | something broken, wrong, failing or a bug report | `fix-it` |
+| CI/CD pipelines or workflows: `.github/workflows`, `.gitlab-ci.yml`, adding, renaming or reviewing jobs and checks | `ci-it` |
 | configure the tech stack, component libraries or design system before development | `stack-it` |
 | an issue number, or a feature clear enough to build | `build-it` |
 | an idea, a vague feature, or an issue with open decisions | `plan-it`, then `build-it` once the brief is written |
@@ -27,4 +28,4 @@ For Codex and Claude Code invocation and optional skill lookup, follow [Using sk
 | "open a PR", "open an MR", "ship this", a finished change in the working tree | `ship-it` |
 | "show me it works", "screenshot it" | `prove-it` |
 
-Two fit? Take the earlier row: a bug inside a feature request is still a bug. Nothing fits (a question, an explanation, a one-off command)? Just do it directly; not everything needs a skill.
+Two fit? Take the earlier row: a bug inside a feature request is still a bug, and a failing pipeline is fix-it, which follows ci-it when the cause is CI configuration. Nothing fits (a question, an explanation, a one-off command)? Just do it directly; not everything needs a skill.

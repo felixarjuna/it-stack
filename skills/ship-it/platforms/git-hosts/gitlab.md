@@ -10,6 +10,7 @@ Write request bodies as exact JSON to a temporary file and pass `--input FILE`; 
 
 | Operation | Method and endpoint, JSON fields where needed |
 | --- | --- |
+| `project.requiredChecks` | GET `projects/P`: `only_allow_merge_if_pipeline_succeeds` and `allow_merge_on_skipped_pipeline` (GitLab requires the whole pipeline, not named jobs; a job blocks unless `allow_failure`); GET `projects/P/external_status_checks` where the tier supports it. Unavailable endpoints are reported as unknown |
 | `issues.list` | GET `projects/P/issues?state=opened&per_page=100` |
 | `issues.read` | GET `projects/P/issues/N`, plus paginated `projects/P/issues/N/notes` |
 | `issues.create` | POST `projects/P/issues`, `{title, description}` |
