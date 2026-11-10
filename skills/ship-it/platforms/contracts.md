@@ -7,6 +7,7 @@ These are instruction contracts, not names of executable tools. Resolve an opera
 | Operation | Input → required result |
 | --- | --- |
 | `project` | selected remote → kind, hostname, full project path, API ID, default branch, authentication/capabilities |
+| `project.requiredChecks` | project + target branch → the check/job names a review must pass, their source (protection, ruleset, project setting) and whether the list is complete; read-only, a permission error is `unknown`, never `none` |
 | `issues.list` | project → all open issues, paginated; read comments separately when needed |
 | `issues.read` | project + issue number → body, labels, comments, URL |
 | `issues.create/update/comment/close` | project + identity + exact text → confirmed issue state/URL; preserve existing body on update |
