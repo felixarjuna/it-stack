@@ -1,6 +1,6 @@
 # ci-it: one set of CI conventions for GitHub and GitLab
 
-Status: draft for owner review. No skill code until the owner approves this design.
+Status: approved by the owner on 2026-11-10 with the recommended answer to each open question (add `project.requiredChecks`; CI skills task-scoped to the selected host; this repo's own CI rename is a follow-up). Implemented on feat/ci-it.
 
 ## Intent
 
