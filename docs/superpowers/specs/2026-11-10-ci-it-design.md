@@ -165,3 +165,29 @@ Task-scoped: these two are offered only when a task touches CI (ci-it, or anothe
 1. **Required checks lookup**: add the read-only `project.requiredChecks` operation to the Git host contract and both adapters (recommended), or leave required checks as a manual "check branch protection" step?
 2. **Task-scoped dependencies**: offer the two CI skills only on CI work for the selected host (recommended), or include them in the general one-time offer with the other four?
 3. **This repo's own CI**: rename `CI` / `validate` here to `ci` / `check stack` in this PR, or leave it for a follow-up?
+
+## Amendment 2026-11-10: `stage:job` names, kept job ids, worker PRs linked in the parent
+
+Owner decisions after #14 (0.6.0), shipped in 0.6.1. The sections above are left as approved; where they disagree, this amendment wins.
+
+1. **Job names are `stage:job`**, GitLab's style (`test:pypy`, `build:dist`), replacing "verb-first English phrase" in Shared rules §1, the `ci-naming` fact and both host mappings:
+   - lowercase; before the colon is the stage or verb (`build`, `test`, `scan`, `check`, `validate`, `deploy`, …), after it the object;
+   - one token: multi-word objects join with hyphens (`check:deploy-secrets`, `check:schema-drift`);
+   - variants keep the base name and append the variant after one space, exactly as GitLab's `parallel:` names jobs (`test:ruby 1/3`, `test:python 3.12`), so native `parallel:`/`parallel:matrix` naming keeps working; variants come from the host (`parallel:`, `matrix`), never hand-copied jobs;
+   - on GitLab the name is the job key; on GitHub it goes in each job's `name:`, always quoted (`name: "test:client"`), and checks read `<workflow> / test:client`;
+   - workflow/pipeline names are unchanged: short lowercase purposes (`ci`, `deploy`, `sast`, `security`, `terraform`, `schema drift`).
+2. **Job ids are kept on rename.** Ids are invisible on PRs and matter only to `needs:` and outputs, so changing them only adds risk. A new GitHub job's id is the kebab-case form of its name with the colon replaced by a hyphen (`test:client` → `test-client`). This replaces "Job id: kebab-case of the name" under github.md.
+3. **Worker PRs are linked in the parent.** In the T3 harness, when a worker thread opens its PR, the control room also links that PR to the control-room thread, so the owner sees every PR in the worker's thread and in the parent. run-it's "Review opened" step says the same, harness-neutrally.
+
+The batterypass worked example becomes:
+
+| File | Workflow `name:` | Job names |
+| --- | --- | --- |
+| `ci.yml` | `ci` | `test:client`, `test:server`, `test:e2e`, `scan:secrets` |
+| `sast.yml` | `sast` | `scan:code` |
+| `security.yml` | `security` | `scan:dependencies`, `build:sbom` |
+| `terraform.yml` | `terraform` | `validate:terraform` |
+| `schema-drift.yml` | `schema drift` | `check:schema-drift` |
+| `deploy.yml` | `deploy` | `build:images`, `check:deploy-secrets`, `deploy:demo` |
+
+The `ci-naming` fact example becomes: `it-stack (default; stage:job job names such as test:client, short lowercase workflow names such as ci)`.

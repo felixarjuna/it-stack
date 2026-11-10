@@ -19,10 +19,12 @@ Before changing anything, list the existing workflows/pipelines, their names, jo
 
 ## 1. Names
 
-- **Job names** are short English phrases, verb first, lowercase: `lint code`, `build image`, `test python 3.11`, `deploy demo`. The name says what the job does to what.
-- **Variants** get a suffix, never a different verb: `test ruby 1/3`, `test python 3.12`.
+- **Job names** are `stage:job`, lowercase, GitLab's style (`test:pypy`, `build:dist`). Before the colon is the stage or verb (`build`, `test`, `scan`, `check`, `validate`, `deploy`, …); after it is the object the job acts on: `build:images`, `test:client`, `deploy:demo`.
+- **One token.** A multi-word object joins its words with hyphens, so the name has no spaces: `check:deploy-secrets`, `check:schema-drift`.
+- **Variants** keep the base name and append the variant after one space, exactly as GitLab's `parallel:` names its jobs: `test:ruby 1/3`, `test:python 3.12`. Never a different stage or a hand-copied job per variant; let the host generate them (`parallel:`/`parallel:matrix` on GitLab, `matrix` on GitHub).
 - **Workflow/pipeline names** are a short lowercase purpose: `ci`, `deploy`, `sast`, `security`, `terraform`, `schema drift`. Multi-word names use spaces; the file name uses hyphens (`schema-drift.yml`).
-- Don't repeat the workflow's name in its jobs: `ci / test client`, not `ci / ci test client`.
+- Don't repeat the workflow's name in its jobs: `ci / test:client`, not `ci / ci:test-client`.
+- **Renaming keeps ids.** Where a host separates a job's id from its displayed name (GitHub), a rename changes only the name; see the host file.
 
 This convention follows GitLab's [`gitlab-ci-skill`](https://gitlab.com/gitlab-org/ci-cd/gitlab-ci-skill).
 
@@ -68,14 +70,14 @@ Renaming a project's GitHub workflows to the convention:
 
 | File | Workflow `name:` | Job names |
 | --- | --- | --- |
-| `ci.yml` | `ci` | `test client`, `test server`, `test e2e`, `scan secrets` |
-| `sast.yml` | `sast` | `scan code` |
-| `security.yml` | `security` | `scan dependencies`, `build sbom` |
-| `terraform.yml` | `terraform` | `validate terraform` |
-| `schema-drift.yml` | `schema drift` | `check schema drift` |
-| `deploy.yml` | `deploy` | `build images`, `check deploy secrets`, `deploy demo` |
+| `ci.yml` | `ci` | `test:client`, `test:server`, `test:e2e`, `scan:secrets` |
+| `sast.yml` | `sast` | `scan:code` |
+| `security.yml` | `security` | `scan:dependencies`, `build:sbom` |
+| `terraform.yml` | `terraform` | `validate:terraform` |
+| `schema-drift.yml` | `schema drift` | `check:schema-drift` |
+| `deploy.yml` | `deploy` | `build:images`, `check:deploy-secrets`, `deploy:demo` |
 
-`deploy.yml` triggers on `workflow_run` of the workflow named `CI`. The same commit changes that trigger to `ci`; otherwise deploys silently stop. Badges and docs that name the old workflows change too, and the PR lists old → new required-check names for the owner.
+Only `name:` changes; job ids stay as they were, so every `needs:` keeps working. Checks then read `ci / test:client`, `deploy / deploy:demo`. `deploy.yml` triggers on `workflow_run` of the workflow named `CI`. The same commit changes that trigger to `ci`; otherwise deploys silently stop. Badges and docs that name the old workflows change too, and the PR lists old → new required-check names for the owner.
 
 ## If it isn't installed
 
