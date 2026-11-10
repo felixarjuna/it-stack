@@ -26,7 +26,7 @@ Project workflow facts plus independent Git host and Harness settings, one bulle
 - **merge:** squash. After merge, CI applies migrations to production; until then the new release can fail on new columns.
 - **delete-branch:** true.
 - **ci:** required (optional permits absent CI only when local checks pass).
-- **ci-naming:** it-stack (optional; verb-first job names and short lowercase workflow names, see [ci-it](../ci-it/SKILL.md). Or describe the project's own convention).
+- **ci-naming:** it-stack (optional; `stage:job` job names such as `test:client` and short lowercase workflow names such as `ci`, see [ci-it](../ci-it/SKILL.md). Or describe the project's own convention).
 - **private:** screenshots show seed data only, never production. Security problems go to private advisories, never public issues or PRs.
 - **execution:** inline (optional; use `sessions` to request separate sessions through the selected harness).
 - **design-system:** `docs/design-system.md` (optional; stack, component sources, tokens, interaction patterns and visual acceptance).

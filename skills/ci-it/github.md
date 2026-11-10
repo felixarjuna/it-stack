@@ -4,10 +4,11 @@ How the [shared rules](SKILL.md) map onto `.github/workflows/`. For YAML validit
 
 ## Names and shape
 
-- GitHub has no stages. The build → test → deploy shape lives in `needs:`; the naming convention lives in each job's `name:`. Checks show as `<workflow name> / <job name>`, e.g. `ci / test client`.
+- GitHub has no stages. The build → test → deploy shape lives in `needs:`; the naming convention lives in each job's `name:`. Checks show as `<workflow name> / <job name>`, e.g. `ci / test:client`.
 - Workflow `name:` is the short purpose (`ci`, `schema drift`); the file uses hyphens (`schema-drift.yml`).
-- Job **id** is the kebab-case form of the name (`test-client`); `name:` carries the readable form (`test client`). `needs:` uses ids.
-- Matrix jobs set `name:` with the variant suffix, e.g. `name: test python ${{ matrix.python }}`, so GitHub doesn't append `(3.11)` on its own.
+- Quote every job `name:`: `name: "test:client"`. Unquoted `test:client` is a valid plain YAML scalar (the colon isn't followed by a space), but quoting keeps it safe and readable.
+- Job **ids** are invisible on the PR; they matter only to `needs:` and outputs. When renaming, keep the existing id and change only `name:`: changing ids only adds risk. A **new** job gets the kebab-case form of its name with the colon replaced by a hyphen: `test:client` → id `test-client`, `check:schema-drift` → `check-schema-drift`.
+- Matrix jobs set `name:` with the variant suffix after one space, e.g. `name: "test:python ${{ matrix.python }}"` → `test:python 3.12`, so GitHub doesn't append `(3.12)` on its own.
 - Reuse: reusable workflows (`on: workflow_call`, `uses: ./.github/workflows/<file>.yml`) for whole jobs, composite actions (`.github/actions/<name>/action.yml`) for repeated steps.
 
 ## Rename dependants

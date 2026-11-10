@@ -4,9 +4,9 @@ How the [shared rules](SKILL.md) map onto `.gitlab-ci.yml`. For stack recipes, t
 
 ## Names and shape
 
-- Stages are native: `stages: [build, test, deploy]`. Job names follow the convention (`build image`, `test ruby 1/3`); `needs:` builds the DAG across stages.
+- Stages are native: `stages: [build, test, deploy]`. The job key is the `stage:job` name itself (`build:image`, `test:ruby`), and its `stage:` matches the part before the colon where that stage exists (`scan:` and `check:` jobs sit in `test` unless the pipeline defines their own stage). `needs:` builds the DAG across stages.
 - Job names must not collide with reserved keywords (`image`, `services`, `stages`, `variables`, …).
-- `parallel:` jobs get GitLab's own `1/3` suffix, which matches the variant rule; `parallel:matrix` variants show their values.
+- Variants come from `parallel:`, never from hand-copied keys. `parallel: 3` on `test:ruby` produces `test:ruby 1/3` … `test:ruby 3/3`, which is the variant rule exactly; `parallel:matrix` variants show their values in GitLab's own format. `needs:` names the base key (`test:ruby`).
 - Reuse: hidden jobs (`.test-base`) with `extends:`, `default:` for shared fields, `include:` for shared files, and CI/CD Catalog components.
 - Pipeline purpose: a project usually has one `.gitlab-ci.yml`; separate purposes go into included files or child pipelines named for the purpose (`security`, `deploy`), gated with `workflow:rules:`/`rules:`.
 
