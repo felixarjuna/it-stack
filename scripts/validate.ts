@@ -12,7 +12,8 @@ import { fileURLToPath } from "node:url";
 const SKILL_NAME = /^[a-z]+-it$/;
 const MAX_DESCRIPTION = 1024;
 const FRONTMATTER = /^---\r?\n(?<body>[\s\S]*?)\r?\n---/;
-const REFERENCES_PLUGIN = /mattpocock-skills|superpowers:/;
+const REFERENCES_PLUGIN =
+  /mattpocock-skills|superpowers:|gitlab-ci-skill|authoring-github-workflows/;
 const FALLBACK_HEADING = /^## If it isn't installed/m;
 const PRIVATE_TEXT = [
   { label: "project name", pattern: /perki/i },

@@ -26,6 +26,7 @@ Project workflow facts plus independent Git host and Harness settings, one bulle
 - **merge:** squash. After merge, CI applies migrations to production; until then the new release can fail on new columns.
 - **delete-branch:** true.
 - **ci:** required (optional permits absent CI only when local checks pass).
+- **ci-naming:** it-stack (optional; verb-first job names and short lowercase workflow names, see [ci-it](../ci-it/SKILL.md). Or describe the project's own convention).
 - **private:** screenshots show seed data only, never production. Security problems go to private advisories, never public issues or PRs.
 - **execution:** inline (optional; use `sessions` to request separate sessions through the selected harness).
 - **design-system:** `docs/design-system.md` (optional; stack, component sources, tokens, interaction patterns and visual acceptance).
@@ -40,6 +41,7 @@ Project workflow facts plus independent Git host and Harness settings, one bulle
 - **merge:** project-default; see [operation contracts](platforms/contracts.md). Existing GitHub projects with no explicit method retain the legacy merge method when compatible.
 - **delete-branch:** true.
 - **ci:** required; absent or unknown CI is not success.
+- **ci-naming:** it-stack. Follow ci-it's naming rules for new jobs and workflows; never rename an established scheme unless asked.
 - **git-host / harness:** follow [platform setup](platforms/README.md); Auto detects independently. No harness is required for inline work.
 - **private:** never put secrets, real user data or security details in a PR, issue or commit; the repo may be public.
 - **execution:** inline. Preserve a recorded run mode on resume; an explicit owner choice overrides it.

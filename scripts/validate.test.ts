@@ -87,6 +87,36 @@ test("skills that reference another plugin carry a fallback", () => {
   assert.deepEqual(withFallback, []);
 });
 
+test("skills that route to the upstream CI skills carry a fallback", () => {
+  for (const name of ["gitlab-ci-skill", "authoring-github-workflows"]) {
+    const body = `Use \`${name}\` when available.\n`;
+    const without = validate(
+      stack({ "skills/ship-it/SKILL.md": skill("ship-it", undefined, body) })
+    );
+    assert.ok(without.some((p) => p.includes("fallback")), `${name}: ${without.join("\n")}`);
+    const withFallback = validate(
+      stack({
+        "skills/ship-it/SKILL.md": skill(
+          "ship-it",
+          undefined,
+          `${body}\n## If it isn't installed\n\nLint by hand.\n`
+        ),
+      })
+    );
+    assert.deepEqual(withFallback, [], name);
+  }
+});
+
+test("project facts document ci-naming with a default", () => {
+  const doc = readFileSync(
+    new URL("../skills/ship-it/project-facts.md", import.meta.url),
+    "utf8"
+  );
+  assert.match(doc, /```markdown\n## it-stack[\s\S]*\n- \*\*ci-naming:\*\* [\s\S]*```/);
+  const missing = doc.split("## When a key is missing")[1] ?? "";
+  assert.match(missing, /\n- \*\*ci-naming:\*\* /);
+});
+
 test("rejects project-specific or private text", () => {
   for (const text of ["PERKI members", "in Aachen", "mail me at someone@gmail.com"]) {
     const problems = validate(
